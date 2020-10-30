@@ -1,0 +1,27 @@
+name: ClassicDuels
+main: me.despical.classicduels.Main
+author: Despical
+version: ${project.version}
+api-version: 1.13
+softdepend: [PlaceholderAPI]
+
+commands:
+  ClassicDuels:
+    description: Classic Duels commands
+    aliases: [cd, duels]
+
+permissions:
+  cd.admin.*:
+    default: op
+    children:
+      cd.updatenotify: true
+      cd.admin: true
+      cd.admin.create: true
+      cd.admin.setup: true
+      cd.admin.delete: true
+      cd.admin.list: true
+      cd.admin.stopgame: true
+      cd.admin.forcestart: true
+      cd.admin.addsign: true
+      cd.admin.sign.create: true
+      cd.admin.sign.break: true

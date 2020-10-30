@@ -1,0 +1,98 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# +---------------------------------------------------------+ #
+# |        Classic Duels by Despical (Version 1.0.0)        | #
+# +---------------------------------------------------------+ #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Enable bossbar support?
+Bossbar-Enabled: true
+
+# How many seconds game should take to start.
+Starting-Waiting-Time: 5
+
+# How many seconds classic game should play.
+Classic-Gameplay-Time: 900
+
+# The delay between hitting players. Default is 4.
+Hit-Cooldown-Delay: 16
+
+# This is how many times can flint and steel be used in game.
+FNS-Durability: 5
+
+# Should we hook into bungee cord? (If you wanna use arena per server option)
+# You STILL need to use external addon for HUB server game signs
+# Classic Duels doesn't offer that addon.
+BungeeActivated: false
+
+# Enable this option when you're using MySQL, otherwise it won't work.
+# Be careful when changing this because there is NO migrator between
+# flat file and MySQL for player stats.
+DatabaseActivated: false
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, game mode and more
+InventoryManager: true
+
+# Should in-game chat format be enabled?
+# You can edit the formatting in language.yml
+ChatFormat-Enabled: true
+
+# Should we disable all chat related stuff?
+# It will disable the separated chat, for example
+Disable-Separate-Chat: false
+
+# Should players can pickup the arrows or should we delete them when player tries to pickup?
+Pickup-Arrows: true
+
+# Basic permission for game, permissions explained here: https://github.com/Despical/ClassicDuels/wiki/Commands-and-permissions#basic-permissions
+Basic-Permissions:
+  # <arena> represents arena name (NOT MAP NAME), for example: 'cd.join.CD02'
+  # use 'cd.join.*' to enable access to all arenas
+  Join-Permission: "cd.join.<arena>"
+
+# Should we enable short commands such as /leave
+Enable-Short-Commands: false
+
+# Should /cd leave command be blocked?
+Disable-Leave-Command: false
+
+# Commands which can be used in game, remove all of them to disable
+Whitelisted-Commands:
+  - me
+  - help
+
+# Enable in game rewards? See rewards.yml for more...
+Rewards-Enabled: false
+
+# Should we block every not Classic Duels associated commands in game?
+Block-Commands-In-Game: true
+
+# Should we fire some cool fireworks at location of every player after the game ends?
+Firework-When-Game-Ends: true
+
+# Should players' name tags in game be hidden?
+Nametags-Hidden: false
+
+# Should blocks behind game signs change their color based on game state?
+# They will change color to:
+# - white (waiting for players) stained glass
+# - yellow (starting) stained glass
+# - orange (in game) stained glass
+# - gray (ending) stained glass
+# - black (restarting) stained glass
+# - red (inactive) stained glass
+Signs-Block-States-Enabled: true
+
+Update-Notifier:
+  # Should we check for updates on plugin start/after admin join?
+  # You REALLY should have this true!
+  Enabled: true
+  # Should we inform you when beta version is out?
+  # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
+  Notify-Beta-Versions: true
+
+# Don't edit it. But who's stopping you? It's your server!
+File-Version: 0
+
+# No way! You've reached the end! But... where's the dragon!?
