@@ -16,7 +16,7 @@ Eliminate your opponent in traditional ways to win the Duel! Who will be the win
 | [Commons Box](https://github.com/Despical/Commons-Box)        | [Despical](https://github.com/Despical)             | [GPLv3](https://github.com/Despical/Commons-Box/blob/master/LICENSE.md)      |
 
 
-## Want to use Classic Duels API? [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
+## Want to use Classic Duels API? [![](https://jitpack.io/v/Despical/ClassicDuels.svg)](https://jitpack.io/#Despical/ClassicDuels)
 Add repository
 ```xml
     <repositories>
