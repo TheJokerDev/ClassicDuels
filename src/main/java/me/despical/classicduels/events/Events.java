@@ -424,15 +424,4 @@ public class Events implements Listener {
 		event.setCancelled(true);
 		event.getItem().remove();
 	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onCraft(PlayerInteractEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
-		}
-
-		if (event.getPlayer().getTargetBlock(null, 7).getType() == XMaterial.CRAFTING_TABLE.parseMaterial()) {
-			event.setCancelled(true);
-		}
-	}
 }
