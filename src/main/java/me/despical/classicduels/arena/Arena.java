@@ -100,7 +100,7 @@ public class Arena extends BukkitRunnable {
 
 					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
 					setArenaState(ArenaState.STARTING);
-					setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
+					setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 5));
 					showPlayers();
 				}
 
@@ -184,7 +184,7 @@ public class Arena extends BukkitRunnable {
 					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.In-Game-Info"));
 				}
 
-				if (getTimer() < 6) {
+				if (getTimer() <= 5) {
 					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("seconds", getTimer() == 1 ? "second" : "seconds").replace("%time%", String.valueOf(getTimer())));
 				}
 
