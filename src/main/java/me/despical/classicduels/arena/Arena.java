@@ -229,7 +229,7 @@ public class Arena extends BukkitRunnable {
 					for (Player players : Bukkit.getOnlinePlayers()) {
 						player.showPlayer(plugin, players);
 
-						if (ArenaRegistry.isInArena(players)) {
+						if (!ArenaRegistry.isInArena(players)) {
 							players.showPlayer(plugin, player);
 						}
 					}

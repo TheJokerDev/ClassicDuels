@@ -56,16 +56,18 @@ public class JoinEvent implements Listener {
 			return;
 		}
 
-		Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 1).requestUpdateCheck().whenComplete((result, exception) -> {
+		Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 85356).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
 			}
 
 			if (result.getNewestVersion().contains("b")) {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound a beta update: v" + result.getNewestVersion() + " Download on Spigot"));
+				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
 			} else {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound an update: v" + result.getNewestVersion() + " Download on Spigot"));
+				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound an update: v" + result.getNewestVersion() + " Download:"));
 			}
+
+			event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/classic-duels-1-9-1-16-3.85356/"));
 		}), 25);
 	}
 }

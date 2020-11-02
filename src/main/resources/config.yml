@@ -1,8 +1,17 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |        Classic Duels by Despical (Version 1.0.0)        | #
+# |        Classic Duels by Despical (Version 1.0.1)        | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
+# Select locale of Classic Duels, default it's English.
+# Available locales:
+#    default - English language
+#    de - Deutsche sprache
+#    tr - Türkçe dili
+locale: default
+
 
 # Enable bossbar support?
 Bossbar-Enabled: true

@@ -58,8 +58,6 @@ public class SignManager implements Listener {
 		signLines = config.getStringList("Signs.Lines");
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		loadSigns();
-		updateSignScheduler();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -152,7 +150,7 @@ public class SignManager implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-	public void onJoinAttempt(PlayerInteractEvent e) {
+	public void onJoinAttempt(final PlayerInteractEvent e) {
 		ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
 
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign && arenaSign != null) {
@@ -202,7 +200,7 @@ public class SignManager implements Listener {
 		Debugger.debug("Sign load event finished took {0} ms", System.currentTimeMillis() - start);
 	}
 
-	private void updateSignScheduler() {
+	public void updateSigns() {
 		Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updating signs");
 			long start = System.currentTimeMillis();
@@ -221,6 +219,7 @@ public class SignManager implements Listener {
 						switch (arenaSign.getArena().getArenaState()) {
 							case WAITING_FOR_PLAYERS:
 								behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
 								}
@@ -228,6 +227,7 @@ public class SignManager implements Listener {
 								break;
 							case STARTING:
 								behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
 								}
@@ -235,6 +235,7 @@ public class SignManager implements Listener {
 								break;
 							case IN_GAME:
 								behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
 								}
@@ -242,6 +243,7 @@ public class SignManager implements Listener {
 								break;
 							case ENDING:
 								behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
 								}
@@ -249,6 +251,7 @@ public class SignManager implements Listener {
 								break;
 							case RESTARTING:
 								behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
 								}
@@ -256,6 +259,7 @@ public class SignManager implements Listener {
 								break;
 							case INACTIVE:
 								behind.setType(XMaterial.RED_STAINED_GLASS.parseMaterial());
+
 								if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_13_R1)) {
 									Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 14);
 								}

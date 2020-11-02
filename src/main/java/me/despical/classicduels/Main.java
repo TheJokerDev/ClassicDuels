@@ -12,6 +12,7 @@ import me.despical.classicduels.handlers.ChatManager;
 import me.despical.classicduels.handlers.PermissionManager;
 import me.despical.classicduels.handlers.PlaceholderManager;
 import me.despical.classicduels.handlers.items.SpecialItem;
+import me.despical.classicduels.handlers.language.LanguageManager;
 import me.despical.classicduels.handlers.rewards.RewardsFactory;
 import me.despical.classicduels.handlers.sign.SignManager;
 import me.despical.classicduels.kits.KitRegistry;
@@ -50,6 +51,7 @@ public class Main extends JavaPlugin {
 	private ConfigPreferences configPreferences;
 	private CommandHandler commandHandler;
 	private ChatManager chatManager;
+	private LanguageManager languageManager;
 	private UserManager userManager;
 
 	@Override
@@ -155,6 +157,7 @@ public class Main extends JavaPlugin {
 			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
 		}
 
+		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
 		SpecialItem.loadAll();
 		PermissionManager.init();
@@ -163,12 +166,14 @@ public class Main extends JavaPlugin {
 		new QuitEvent(this);
 		new JoinEvent(this);
 		new ChatEvents(this);
+		signManager = new SignManager(this);
 		ArenaRegistry.registerArenas();
+		signManager.loadSigns();
+		signManager.updateSigns();
 		new Events(this);
 		new LobbyEvent(this);
 		new SpectatorItemEvents(this);
 		rewardsFactory = new RewardsFactory(this);
-		signManager = new SignManager(this);
 		registerSoftDependenciesAndServices();
 		commandHandler = new CommandHandler(this);
 	}
@@ -195,6 +200,7 @@ public class Main extends JavaPlugin {
 
 		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
 		metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
+		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().getPrefix()));
 		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
 			if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 				return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
@@ -209,7 +215,7 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
-		UpdateChecker.init(this, 1).requestUpdateCheck().whenComplete((result, exception) -> {
+		UpdateChecker.init(this, 85356).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
 			}
@@ -218,7 +224,7 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Debugger.sendConsoleMessage("[ClassicDuels] Found a new beta version available: v" + result.getNewestVersion());
 					Debugger.sendConsoleMessage("[ClassicDuels] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[ClassicDuels] ");
+					Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-3.85356/");
 				}
 
 				return;
@@ -227,7 +233,7 @@ public class Main extends JavaPlugin {
 			MessageUtils.updateIsHere();
 			Debugger.sendConsoleMessage("[ClassicDuels] Found a new version available: v" + result.getNewestVersion());
 			Debugger.sendConsoleMessage("[ClassicDuels] Download it SpigotMC:");
-			Debugger.sendConsoleMessage("[ClassicDuels] ");
+			Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-3.85356/");
 		});
 	}
 
@@ -269,6 +275,10 @@ public class Main extends JavaPlugin {
 		return chatManager;
 	}
 
+	public LanguageManager getLanguageManager() {
+		return languageManager;
+	}
+
 	public UserManager getUserManager() {
 		return userManager;
 	}
@@ -279,13 +289,14 @@ public class Main extends JavaPlugin {
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
 				StringBuilder update = new StringBuilder(" SET ");
+
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(stat.getName()).append("=").append(user.getStat(stat));
+						update.append(stat.getName()).append("'='").append(user.getStat(stat));
 					}
 
-					update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+					update.append(", ").append(stat.getName()).append("'='").append(user.getStat(stat));
 				}
 
 				String finalUpdate = update.toString();
