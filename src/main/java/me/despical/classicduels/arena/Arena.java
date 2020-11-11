@@ -226,11 +226,11 @@ public class Arena extends BukkitRunnable {
 
 					AttributeUtils.resetAttackCooldown(player);
 
-					for (Player players : Bukkit.getOnlinePlayers()) {
-						player.showPlayer(plugin, players);
+					for (Player playerToShow : Bukkit.getOnlinePlayers()) {
+						player.showPlayer(plugin, playerToShow);
 
-						if (!ArenaRegistry.isInArena(players)) {
-							players.showPlayer(plugin, player);
+						if (!ArenaRegistry.isInArena(playerToShow)) {
+							playerToShow.showPlayer(plugin, player);
 						}
 					}
 
