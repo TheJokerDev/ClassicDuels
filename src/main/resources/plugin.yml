@@ -1,7 +1,7 @@
 name: ClassicDuels
 main: me.despical.classicduels.Main
 author: Despical
-version: ${project.version}d
+version: ${project.version}
 api-version: 1.13
 softdepend: [PlaceholderAPI]
 
