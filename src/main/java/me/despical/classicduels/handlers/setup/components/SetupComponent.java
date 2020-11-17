@@ -1,7 +1,7 @@
 package me.despical.classicduels.handlers.setup.components;
 
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.classicduels.handlers.setup.SetupInventory;
+import me.despical.inventoryframework.pane.StaticPane;
 
 /**
  * @author Despical

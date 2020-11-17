@@ -39,7 +39,8 @@ public class ConfigPreferences {
 		BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false),
 		CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true), DATABASE_ENABLED("DatabaseActivated", false),
 		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
-		INVENTORY_MANAGER_ENABLED("InventoryManager", true), PICKUP_ARROWS("Pickup-Arrows", true);
+		INVENTORY_MANAGER_ENABLED("InventoryManager", true), PICKUP_ARROWS("Pickup-Arrows", true),
+		DISABLE_LEVEL_COUNTDOWN("Disable-Level-Countdown", false);
 
 		private final String path;
 		private final boolean def;

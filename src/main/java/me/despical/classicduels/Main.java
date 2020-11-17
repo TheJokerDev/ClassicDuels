@@ -52,6 +52,7 @@ public class Main extends JavaPlugin {
 	private CommandHandler commandHandler;
 	private ChatManager chatManager;
 	private LanguageManager languageManager;
+	private CuboidSelector cuboidSelector;
 	private UserManager userManager;
 
 	@Override
@@ -63,10 +64,10 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		saveDefaultConfig();
 
-		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages", false));
+		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages"));
 		Debugger.debug("Initialization start");
 
-		if (getConfig().getBoolean("Developer-Mode", false)) {
+		if (getConfig().getBoolean("Developer-Mode")) {
 			Debugger.deepDebug(true);
 			Debugger.debug("Deep debug enabled");
 			getConfig().getStringList("Listenable-Performances").forEach(Debugger::monitorPerformance);
@@ -166,16 +167,18 @@ public class Main extends JavaPlugin {
 		new QuitEvent(this);
 		new JoinEvent(this);
 		new ChatEvents(this);
+		new Events(this);
+		new LobbyEvent(this);
+		new SpectatorItemEvents(this);
+
 		signManager = new SignManager(this);
 		ArenaRegistry.registerArenas();
 		signManager.loadSigns();
 		signManager.updateSigns();
-		new Events(this);
-		new LobbyEvent(this);
-		new SpectatorItemEvents(this);
 		rewardsFactory = new RewardsFactory(this);
 		registerSoftDependenciesAndServices();
 		commandHandler = new CommandHandler(this);
+		cuboidSelector = new CuboidSelector(this);
 	}
 
 	private void registerSoftDependenciesAndServices() {
@@ -183,6 +186,7 @@ public class Main extends JavaPlugin {
 		long start = System.currentTimeMillis();
 
 		startPluginMetrics();
+
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			Debugger.debug("Hooking into PlaceholderAPI");
 			new PlaceholderManager().register();
@@ -224,7 +228,7 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Debugger.sendConsoleMessage("[ClassicDuels] Found a new beta version available: v" + result.getNewestVersion());
 					Debugger.sendConsoleMessage("[ClassicDuels] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-3.85356/");
+					Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-4.85356/");
 				}
 
 				return;
@@ -233,7 +237,7 @@ public class Main extends JavaPlugin {
 			MessageUtils.updateIsHere();
 			Debugger.sendConsoleMessage("[ClassicDuels] Found a new version available: v" + result.getNewestVersion());
 			Debugger.sendConsoleMessage("[ClassicDuels] Download it SpigotMC:");
-			Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-3.85356/");
+			Debugger.sendConsoleMessage("[ClassicDuels] spigotmc.org/resources/classic-duels-1-9-1-16-4.85356/");
 		});
 	}
 
@@ -277,6 +281,10 @@ public class Main extends JavaPlugin {
 
 	public LanguageManager getLanguageManager() {
 		return languageManager;
+	}
+
+	public CuboidSelector getCuboidSelector() {
+		return cuboidSelector;
 	}
 
 	public UserManager getUserManager() {

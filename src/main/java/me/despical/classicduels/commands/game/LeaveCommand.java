@@ -36,7 +36,7 @@ public class LeaveCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
-		if (!plugin.getConfig().getBoolean("Disable-Leave-Command", false)) {
+		if (!plugin.getConfig().getBoolean("Disable-Leave-Command")) {
 			Player player = (Player) sender;
 
 			if (!checkIsInGameInstance((Player) sender)) {

@@ -3,6 +3,8 @@ instances:
     endlocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
     firstplayerlocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
     secondplayerlocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
+    areaMin: world, -994.000, 4.000, 853.000, 0.000, 0.000
+    areaMax: world, -994.000, 4.000, 853.000, 0.000, 0.000
     mapname: default
     signs: []
     isdone: false

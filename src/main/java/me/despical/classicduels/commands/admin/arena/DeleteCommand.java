@@ -74,7 +74,7 @@ public class DeleteCommand extends SubCommand {
 
 	@Override
 	public List<String> getTutorial() {
-		return Collections.singletonList("Delete specified arena");
+		return Collections.singletonList("Deletes specified arena");
 	}
 
 	@Override

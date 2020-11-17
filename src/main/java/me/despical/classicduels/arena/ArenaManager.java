@@ -16,13 +16,13 @@ import me.despical.classicduels.utils.Debugger;
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.miscellaneous.MiscUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.commonsbox.string.StringFormatUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,23 +61,23 @@ public class ArenaManager {
 		Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
 
 		if (!arena.isReady()) {
-			player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Arena-Not-Configured"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Arena-Not-Configured"));
 			return;
 		}
 
 		if (gameJoinAttemptEvent.isCancelled()) {
-			player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-Cancelled-Via-API"));
 			return;
 		}
 
 		if (ArenaRegistry.isInArena(player)) {
-			player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Already-Playing"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Already-Playing"));
 			return;
 		}
 
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
 			if (!player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", "*")) || !player.hasPermission(PermissionManager.getJoinPerm().replace("<arena>", arena.getId()))) {
-				player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Join-No-Permission").replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getId())));
+				player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Join-No-Permission").replace("%permission%", PermissionManager.getJoinPerm().replace("<arena>", arena.getId())));
 				return;
 			}
 		}
@@ -87,7 +87,7 @@ public class ArenaManager {
 		}
 
 		if (arena.getPlayers().size() == 2) {
-			player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Full-Game"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Full-Game"));
 			return;
 		}
 
@@ -104,7 +104,7 @@ public class ArenaManager {
 
 		player.setLevel(0);
 		player.setExp(1);
-		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		AttributeUtils.healPlayer(player);
 		player.setFoodLevel(20);
 		player.getInventory().setArmorContents(null);
 		player.getInventory().clear();
@@ -136,7 +136,7 @@ public class ArenaManager {
 			}
 
 			ArenaUtils.hidePlayersOutsideTheGame(player, arena);
-			Debugger.debug("[{0}] Join attempt as spectator finished for {1} took {2} ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+			Debugger.debug("[{0}] Join attempt as spectator finished for {1} took {2} ms.", arena.getId(), player.getName(), System.currentTimeMillis() - start);
 			return;
 		}
 
@@ -158,7 +158,7 @@ public class ArenaManager {
 		arena.getPlayers().forEach(arenaPlayer -> ArenaUtils.showPlayer(arenaPlayer, arena));
 		arena.showPlayers();
 
-		Debugger.debug("[{0}] Join attempt as player for {1} took {2} ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+		Debugger.debug("[{0}] Join attempt as player for {1} took {2} ms.", arena.getId(), player.getName(), System.currentTimeMillis() - start);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class ArenaManager {
 		player.setCollidable(true);
 		user.removeScoreboard();
 		arena.doBarAction(Arena.BarAction.REMOVE, player);
-		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		AttributeUtils.healPlayer(player);
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setExp(0);
@@ -218,7 +218,7 @@ public class ArenaManager {
 		player.setGameMode(GameMode.SURVIVAL);
 
 		for (Player players : plugin.getServer().getOnlinePlayers()) {
-			if (ArenaRegistry.getArena(players) == null) {
+			if (!ArenaRegistry.isInArena(players)) {
 				players.showPlayer(plugin, player);
 			}
 
@@ -232,7 +232,7 @@ public class ArenaManager {
 		}
 
 		plugin.getUserManager().saveAllStatistic(user);
-		Debugger.debug("[{0}] Game leave finished for {1} took {2} ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+		Debugger.debug("[{0}] Game leave finished for {1} took {2} ms.", arena.getId(), player.getName(), System.currentTimeMillis() - start);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class ArenaManager {
 					int i = 0;
 
 					public void run() {
-						if (i == 4 || !arena.getPlayers().contains(player)) {
+						if (i == 4 || !arena.getPlayers().contains(player) || arena.getArenaState() == ArenaState.RESTARTING) {
 							this.cancel();
 						}
 

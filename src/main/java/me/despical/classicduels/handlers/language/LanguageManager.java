@@ -36,7 +36,7 @@ public class LanguageManager {
 		try {
 			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/Classic%20Duels/" + pluginLocale.getPrefix() + ".yml"), new File(plugin.getDataFolder() + File.separator + "messages.yml"));
 		} catch (IOException e) {
-			Debugger.sendConsoleMessage("&c[ClassicDuels] Error while connecting to internet!");
+			Debugger.sendConsoleMessage("&c[Classic Duels] Error while connecting to internet!");
 		}
 	}
 
@@ -66,11 +66,11 @@ public class LanguageManager {
 		}
 
 		if (pluginLocale == null) {
-			Debugger.sendConsoleMessage("&c[ClassicDuels] Plugin locale is invalid! Using default one...");
+			Debugger.sendConsoleMessage("&c[Classic Duels] Plugin locale is invalid! Using default one...");
 			pluginLocale = LocaleRegistry.getByName("English");
 		}
 
-		Debugger.sendConsoleMessage("[ClassicDuels] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+		Debugger.sendConsoleMessage("[Classic Duels] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
 	}
 
 	public boolean isDefaultLanguageUsed() {

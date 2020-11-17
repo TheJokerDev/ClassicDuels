@@ -4,7 +4,7 @@ import me.despical.classicduels.Main;
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.classicduels.arena.ArenaState;
-import org.bukkit.attribute.Attribute;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +38,6 @@ public class LobbyEvent implements Listener {
 
 		event.setCancelled(true);
 		player.setFireTicks(0);
-		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		AttributeUtils.healPlayer(player);
 	}
 }

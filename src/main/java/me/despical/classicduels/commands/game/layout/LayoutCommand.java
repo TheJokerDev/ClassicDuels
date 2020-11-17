@@ -1,57 +1,56 @@
-package me.despical.classicduels.commands.admin.arena;
+package me.despical.classicduels.commands.game.layout;
 
 import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.classicduels.commands.SubCommand;
+import me.despical.classicduels.commands.game.layout.menu.LayoutMenu;
 import me.despical.classicduels.handlers.ChatManager;
-import me.despical.classicduels.handlers.setup.SetupInventory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Despical
- * @since 1.0.0
+ * @since 1.0.2
  * <p>
- * Created at 12.10.2020
+ * Created at 15.11.2020
  */
-public class EditCommand extends SubCommand {
+public class LayoutCommand extends SubCommand {
 
-	public EditCommand() {
-		super("edit");
-
-		setPermission("cd.admin.setup");
+	public LayoutCommand() {
+		super("layout");
 	}
 
 	@Override
 	public String getPossibleArguments() {
-		return "<arena>";
+		return null;
 	}
 
 	@Override
 	public int getMinimumArguments() {
-		return 1;
+		return 0;
 	}
 
 	@Override
 	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
-		if (ArenaRegistry.getArena(args[0]) == null) {
-			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
+		Player player = (Player) sender;
+
+		if (ArenaRegistry.isInArena(player)) {
+			player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Only-Command-Ingame-Is-Leave"));
 			return;
 		}
 
-		new SetupInventory(ArenaRegistry.getArena(args[0]), (Player) sender).openInventory();
+		new LayoutMenu(player).openGui();
 	}
 
 	@Override
 	public List<String> getTutorial() {
-		return Collections.singletonList("Opens arena editor menu");
+		return null;
 	}
 
 	@Override
 	public CommandType getType() {
-		return CommandType.GENERIC;
+		return CommandType.HIDDEN;
 	}
 
 	@Override

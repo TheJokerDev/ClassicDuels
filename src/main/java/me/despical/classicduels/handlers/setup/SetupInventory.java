@@ -1,7 +1,5 @@
 package me.despical.classicduels.handlers.setup;
 
-import com.github.despical.inventoryframework.Gui;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.handlers.ChatManager;
@@ -9,6 +7,8 @@ import me.despical.classicduels.handlers.setup.components.ArenaRegisterComponent
 import me.despical.classicduels.handlers.setup.components.MiscComponents;
 import me.despical.classicduels.handlers.setup.components.SpawnComponents;
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.inventoryframework.Gui;
+import me.despical.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

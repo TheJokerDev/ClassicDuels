@@ -1,10 +1,11 @@
-package me.despical.classicduels.commands.game;
+package me.despical.classicduels.commands.admin.arena;
 
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.classicduels.commands.SubCommand;
 import me.despical.classicduels.handlers.ChatManager;
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.miscellaneous.MiscUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,21 +62,24 @@ public class CreateCommand extends SubCommand {
 			player.sendMessage(chatManager.getPrefix() + chatManager.colorRawMessage("Instance/Arena already exists! Use another ID or delete it first!"));
 		} else {
 			createInstanceInConfig(args[0]);
-			player.sendMessage(ChatColor.BOLD + "----------------------------------------");
-			player.sendMessage(ChatColor.YELLOW + "      Instance " + args[0] + " created!");
+			player.sendMessage(ChatColor.BOLD + "--------------------------------------------");
+			MiscUtils.sendCenteredMessage(player, ChatColor.YELLOW + "Instance " + args[0] + " created!");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/cd edit " + args[0] + ChatColor.GREEN + "!");
-			player.sendMessage(ChatColor.BOLD + "----------------------------------------");
+			MiscUtils.sendCenteredMessage(player, ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/cd edit " + args[0] + ChatColor.GREEN + "!");
+			player.sendMessage(ChatColor.BOLD + "--------------------------------------------");
 		}
 	}
 
 	private void createInstanceInConfig(String id) {
 		String path = "instances." + id + ".";
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		String loc = LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
 
-		config.set(path + "endlocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		config.set(path + "firstplayerlocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		config.set(path + "secondplayerlocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
+		config.set(path + "endlocation", loc);
+		config.set(path + "firstplayerlocation", loc);
+		config.set(path + "secondplayerlocation", loc);
+		config.set(path + "areaMin", loc);
+		config.set(path + "areaMax", loc);
 		config.set(path + "mapname", id);
 		config.set(path + "signs", new ArrayList<>());
 		config.set(path + "isdone", false);
@@ -95,7 +99,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public List<String> getTutorial() {
-		return Collections.singletonList("Create new arena");
+		return Collections.singletonList("Creates new arena with default settings");
 	}
 
 	@Override

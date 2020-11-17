@@ -1,7 +1,7 @@
 package me.despical.classicduels.events.spectator.components;
 
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.classicduels.events.spectator.SpectatorSettingsMenu;
+import me.despical.inventoryframework.pane.StaticPane;
 
 /**
  * @author Despical

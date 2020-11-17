@@ -3,12 +3,10 @@ package me.despical.classicduels.commands;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.commands.admin.HelpCommand;
 import me.despical.classicduels.commands.admin.ListCommand;
-import me.despical.classicduels.commands.admin.arena.DeleteCommand;
-import me.despical.classicduels.commands.admin.arena.EditCommand;
-import me.despical.classicduels.commands.admin.arena.ReloadCommand;
-import me.despical.classicduels.commands.admin.arena.StopCommand;
+import me.despical.classicduels.commands.admin.arena.*;
 import me.despical.classicduels.commands.exception.CommandException;
 import me.despical.classicduels.commands.game.*;
+import me.despical.classicduels.commands.game.layout.LayoutCommand;
 import me.despical.commonsbox.string.StringMatcher;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -48,6 +46,7 @@ public class CommandHandler implements CommandExecutor {
 		registerSubCommand(new LeaveCommand());
 		registerSubCommand(new ArenaSelectorCommand());
 		registerSubCommand(new StatsCommand());
+		registerSubCommand(new LayoutCommand());
 		registerSubCommand(new LeaderBoardCommand());
 
 		plugin.getCommand("classicduels").setExecutor(this);

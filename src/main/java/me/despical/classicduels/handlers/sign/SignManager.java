@@ -10,7 +10,6 @@ import me.despical.commonsbox.compat.VersionResolver;
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -179,7 +178,7 @@ public class SignManager implements Listener {
 	}
 
 	public void loadSigns() {
-		Debugger.debug("Signs load event started");
+		Debugger.debug("Sign loading started");
 		long start = System.currentTimeMillis();
 
 		arenaSigns.clear();

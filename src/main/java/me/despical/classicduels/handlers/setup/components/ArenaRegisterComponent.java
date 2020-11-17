@@ -1,7 +1,5 @@
 package me.despical.classicduels.handlers.setup.components;
 
-import com.github.despical.inventoryframework.GuiItem;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaRegistry;
@@ -12,6 +10,8 @@ import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
 import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.inventoryframework.GuiItem;
+import me.despical.inventoryframework.pane.StaticPane;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -43,6 +43,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 		FileConfiguration config = setupInventory.getConfig();
 		Main plugin = setupInventory.getPlugin();
 		Arena arena = setupInventory.getArena();
+		String s = "instances." + arena.getId() + ".";
 		ItemStack registeredItem;
 
 		if (!setupInventory.getArena().isReady()) {
@@ -65,22 +66,22 @@ public class ArenaRegisterComponent implements SetupComponent {
 		pane.addItem(new GuiItem(registeredItem, e -> {
 			e.getWhoClicked().closeInventory();
 
-			if (ArenaRegistry.getArena(setupInventory.getArena().getId()).isReady()) {
+			if (arena.isReady()) {
 				e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
 
-			String[] locations = {"endlocation", "firstplayerlocation", "secondplayerlocation"};
+			String[] locations = {"endlocation", "firstplayerlocation", "secondplayerlocation", "areaMin", "areaMax"};
 
-			for (String s : locations) {
-				if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-					e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
+			for (String loc : locations) {
+				if (!config.isSet(s + loc) || config.getString(s + loc).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+					e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;
 				}
 			}
 
 			e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
-			config.set("instances." + arena.getId() + ".isdone", true);
+			config.set(s + "isdone", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 
 			List<Sign> signsToUpdate = new ArrayList<>();
@@ -94,18 +95,18 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			arena.setArenaState(ArenaState.WAITING_FOR_PLAYERS);
 			arena.setReady(true);
-			arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
-			arena.setFirstPlayerLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".firstplayerlocation")));
-			arena.setSecondPlayerLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".secondplayerlocation")));
-			arena.setEndLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".Endlocation")));
+			arena.setMapName(config.getString(s + "mapname"));
+			arena.setFirstPlayerLocation(LocationSerializer.locationFromString(config.getString(s + "firstplayerlocation")));
+			arena.setSecondPlayerLocation(LocationSerializer.locationFromString(config.getString(s + "secondplayerlocation")));
+			arena.setEndLocation(LocationSerializer.locationFromString(config.getString(s + "endlocation")));
 
 			ArenaRegistry.registerArena(arena);
 			arena.start();
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 
-			for (Sign s : signsToUpdate) {
-				plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
+			for (Sign sign : signsToUpdate) {
+				plugin.getSignManager().getArenaSigns().add(new ArenaSign(sign, arena));
 			}
 		}), 8, 0);
 	}

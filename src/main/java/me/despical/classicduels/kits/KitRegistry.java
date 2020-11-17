@@ -16,6 +16,7 @@ public class KitRegistry {
 
 	public static void registerBaseKit() {
 		baseKit = new BaseKit();
+		baseKit.registerItems();
 	}
 
 	public static Kit getBaseKit() {

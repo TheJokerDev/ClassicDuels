@@ -63,8 +63,7 @@ public class SpectatorItemEvents implements Listener {
 	}
 
 	private void openSpectatorMenu(World world, Player p) {
-		Inventory inventory = plugin.getServer().createInventory(null, NumberUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-			plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+		Inventory inventory = plugin.getServer().createInventory(null, NumberUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()), plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
 		List<Player> players = ArenaRegistry.getArena(p).getPlayers();
 
 		for (Player player : world.getPlayers()) {

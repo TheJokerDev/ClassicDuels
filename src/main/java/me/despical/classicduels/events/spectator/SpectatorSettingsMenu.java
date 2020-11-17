@@ -1,10 +1,10 @@
 package me.despical.classicduels.events.spectator;
 
-import com.github.despical.inventoryframework.Gui;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.events.spectator.components.MiscComponents;
 import me.despical.classicduels.events.spectator.components.SpeedComponents;
+import me.despical.inventoryframework.Gui;
+import me.despical.inventoryframework.pane.StaticPane;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;

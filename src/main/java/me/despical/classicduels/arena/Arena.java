@@ -15,17 +15,26 @@ import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.miscellaneous.MiscUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.commonsbox.serializer.LocationSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -117,9 +126,11 @@ public class Arena extends BukkitRunnable {
 					gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 5));
 				}
 
-				for (Player player : getPlayers()) {
-					player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 5)));
-					player.setLevel(getTimer());
+				if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_LEVEL_COUNTDOWN)) {
+					for (Player player : getPlayers()) {
+						player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 5)));
+						player.setLevel(getTimer());
+					}
 				}
 
 				if (getPlayers().size() < 2) {
@@ -158,17 +169,21 @@ public class Arena extends BukkitRunnable {
 						break;
 					}
 
+					if (getTimer() <= 5) {
+						broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("seconds", getTimer() == 1 ? "second" : "seconds").replace("%time%", String.valueOf(getTimer())));
+					}
+
 					teleportAllToStartLocation();
 
 					for (Player player : getPlayers()) {
 						AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 						player.getInventory().clear();
-						KitRegistry.getBaseKit().giveItems(player);
+						KitRegistry.getBaseKit().giveKit(player);
 						player.setGameMode(GameMode.SURVIVAL);
 
 						ArenaUtils.hidePlayersOutsideTheGame(player, this);
 
-						setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 900));
+						setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 540));
 
 						plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
 
@@ -182,10 +197,6 @@ public class Arena extends BukkitRunnable {
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.In-Game-Info"));
-				}
-
-				if (getTimer() <= 5) {
-					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("seconds", getTimer() == 1 ? "second" : "seconds").replace("%time%", String.valueOf(getTimer())));
 				}
 
 				setTimer(getTimer() - 1);
@@ -271,6 +282,7 @@ public class Arena extends BukkitRunnable {
 				break;
 			case RESTARTING:
 				players.clear();
+				clearArea();
 				setArenaState(ArenaState.WAITING_FOR_PLAYERS);
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -326,7 +338,7 @@ public class Arena extends BukkitRunnable {
 	/**
 	 * Get timer of arena.
 	 *
-	 * @return timer of lobby time / time to next wave
+	 * @return timer of lobby time
 	 */
 	public int getTimer() {
 		return getOption(ArenaOption.TIMER);
@@ -469,6 +481,32 @@ public class Arena extends BukkitRunnable {
 		if (location != null) {
 			player.teleport(location);
 		}
+	}
+
+	private void clearArea() {
+		String s = "instances." + id + ".";
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		Location minArea = LocationSerializer.locationFromString(config.getString(s + "areaMin")), maxArea = LocationSerializer.locationFromString(config.getString(s + "areaMax"));
+
+		if (minArea == null || maxArea == null) {
+			return;
+		}
+
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			for (int x = (int) minArea.getX(); x <= maxArea.getX(); x++) {
+				for (int y = (int) minArea.getY(); y <= maxArea.getY(); y++) {
+					for (int z = (int) minArea.getZ(); z <= maxArea.getZ(); z++) {
+						Block block = minArea.getWorld().getBlockAt(x, y, z);
+
+						if (plugin.getConfig().getStringList("Whitelisted-Blocks").contains(block.getType().name())) {
+							Bukkit.getScheduler().runTask(plugin, () -> block.setType(Material.AIR));
+						}
+
+						new Location(minArea.getWorld(), x, y, z).getNearbyEntitiesByType(Arrow.class, 2).forEach(Entity::remove);
+					}
+				}
+			}
+		});
 	}
 
 	/**

@@ -9,7 +9,7 @@ package me.despical.classicduels.arena.options;
 public enum ArenaOption {
 
 	/**
-	 * Current arena timer, ex. 30 seconds before game starts.
+	 * Current arena timer, ex. 5 seconds before game starts.
 	 */
 	TIMER(0);
 

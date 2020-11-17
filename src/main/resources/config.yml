@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |        Classic Duels by Despical (Version 1.0.1)        | #
+# |        Classic Duels by Despical (Version 1.0.2)        | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -12,7 +12,6 @@
 #    tr - Türkçe dili
 locale: default
 
-
 # Enable bossbar support?
 Bossbar-Enabled: true
 
@@ -20,7 +19,7 @@ Bossbar-Enabled: true
 Starting-Waiting-Time: 5
 
 # How many seconds classic game should play.
-Classic-Gameplay-Time: 900
+Classic-Gameplay-Time: 540
 
 # The delay between hitting players. Default is 4.
 Hit-Cooldown-Delay: 16
@@ -28,7 +27,7 @@ Hit-Cooldown-Delay: 16
 # This is how many times can flint and steel be used in game.
 FNS-Durability: 5
 
-# Should we hook into bungee cord? (If you wanna use arena per server option)
+# Should we hook into bungee-cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
 # Classic Duels doesn't offer that addon.
 BungeeActivated: false
@@ -51,10 +50,18 @@ ChatFormat-Enabled: true
 # It will disable the separated chat, for example
 Disable-Separate-Chat: false
 
+# Which blocks should we remove in game area after game finishes.
+# Also the arrows will be removed after the game as default.
+Whitelisted-Blocks:
+  - FIRE
+
+# Should we disable animated level bar countdown when the game is in starting state.
+Disable-Level-Countdown: false
+
 # Should players can pickup the arrows or should we delete them when player tries to pickup?
 Pickup-Arrows: true
 
-# Basic permission for game, permissions explained here: https://github.com/Despical/ClassicDuels/wiki/Commands-and-permissions#basic-permissions
+# Basic permission for game, permission explained here: https://github.com/Despical/ClassicDuels/wiki/Commands-and-permissions#basic-permissions
 Basic-Permissions:
   # <arena> represents arena name (NOT MAP NAME), for example: 'cd.join.CD02'
   # use 'cd.join.*' to enable access to all arenas

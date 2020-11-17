@@ -2,7 +2,7 @@ package me.despical.classicduels.arena;
 
 /**
  *
- * Contains all GameStates.
+ * Contains all game states.
  *
  * @author Despical
  * @since 1.0.0
