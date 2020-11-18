@@ -32,7 +32,7 @@ Then add the dependency
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>ClassicDuels</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
