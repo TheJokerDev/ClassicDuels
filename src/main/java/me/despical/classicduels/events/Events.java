@@ -246,9 +246,12 @@ public class Events implements Listener {
 
 		plugin.getUserManager().getUser(victim).addStat(StatsStorage.StatisticType.DEATHS, 1);
 		plugin.getUserManager().getUser(victim).setStat(StatsStorage.StatisticType.LOCAL_WON, -1);
-		plugin.getUserManager().getUser(killer).addStat(StatsStorage.StatisticType.KILLS, 1);
-		plugin.getUserManager().getUser(killer).setStat(StatsStorage.StatisticType.LOCAL_WON, 1);
-		plugin.getRewardsFactory().performReward(killer, Reward.RewardType.KILL);
+
+		if (killer != null) {
+			plugin.getUserManager().getUser(killer).addStat(StatsStorage.StatisticType.KILLS, 1);
+			plugin.getUserManager().getUser(killer).setStat(StatsStorage.StatisticType.LOCAL_WON, 1);
+			plugin.getRewardsFactory().performReward(killer, Reward.RewardType.KILL);
+		}
 
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			victim.spigot().respawn();
