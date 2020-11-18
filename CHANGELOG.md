@@ -1,10 +1,12 @@
-### 1.0.2 Release (14.11.2020)
+### 1.0.2 Release (14.11.2020 - 18)
+* Added license header.
 * Added area selection to clear arena after game.
 * Added layout editor for players to save their kits.
 * Added online player completion to tab complete for stats command.
 * Added new option to disable animated countdown for player's level bar.
 * Added warning message if you place a game sign another world from default.
 * Added chat prefix to some join messages (not in-game).
+* Fixed timer message issues.
 * Fixed some debug prefixes.
 * Fixed some JavaDoc issues.
 * Fixed rewards getting NPE.

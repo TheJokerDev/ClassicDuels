@@ -181,14 +181,10 @@ public class Arena extends BukkitRunnable {
 						gameBar.setProgress(1.0);
 					}
 
-					setTimer(5);
+					setTimer(6);
 
 					if (players.isEmpty()) {
 						break;
-					}
-
-					if (getTimer() <= 5) {
-						broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("seconds", getTimer() == 1 ? "second" : "seconds").replace("%time%", String.valueOf(getTimer())));
 					}
 
 					teleportAllToStartLocation();
@@ -215,6 +211,10 @@ public class Arena extends BukkitRunnable {
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.In-Game-Info"));
+				}
+
+				if (getTimer() <= 5) {
+					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("seconds", getTimer() == 1 ? "second" : "seconds").replace("%time%", String.valueOf(getTimer())));
 				}
 
 				setTimer(getTimer() - 1);
