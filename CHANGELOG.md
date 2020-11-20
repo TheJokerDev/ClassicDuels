@@ -15,6 +15,7 @@
 * Fixed end location saving.
 * Fixed countdown starting from 4 while it should be start from 5.
 * Fixed NPE during giving rewards to players.
+* Fixed ClassCastException when a skeleton shoot a arrow to a player.
 * Removed default false values for config options.
 * Replaced some attribute methods with API methods.
 * Moved script engine to switch-case.
