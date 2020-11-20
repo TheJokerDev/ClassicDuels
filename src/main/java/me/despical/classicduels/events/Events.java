@@ -149,6 +149,10 @@ public class Events implements Listener {
 
 		Projectile arrow = (Projectile) event.getDamager();
 
+		if (!(arrow.getShooter() instanceof Player)) {
+			return;
+		}
+
 		if (!ArenaUtils.areInSameArena((Player) event.getEntity(), (Player) arrow.getShooter())) {
 			return;
 		}
