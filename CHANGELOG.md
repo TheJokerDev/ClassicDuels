@@ -6,6 +6,9 @@
 * Added new option to disable animated countdown for player's level bar.
 * Added warning message if you place a game sign another world from default.
 * Added chat prefix to some join messages (not in-game).
+* Fixed `Error creating shaded jar: null` error in Java 11 - (Developer Alert)
+* Fixed attack cooldown is not resetting on pure reload.
+* Fixed can not registering events in Minecraft 1.9.x.
 * Fixed getting NPE when player die from fire.
 * Fixed timer message issues.
 * Fixed some debug prefixes.
@@ -18,12 +21,13 @@
 * Fixed ClassCastException when a skeleton shoot a arrow to a player.
 * Removed default false values for config options.
 * Replaced some attribute methods with API methods.
+* Moved project into Java 11.
 * Moved script engine to switch-case.
 * Some changes on default kit design.
-* Some changes on kit system to add custom ones but it's not implemented yet.
+* Some changes on kit system to add custom ones however it's not implemented yet.
 * Changed default gameplay time to 540 seconds from 900.
 * Changed package of a class - (Developer Alert)
-   * me.despical.classicduels.commands.admin.arena.CreateCommand
+   * me.despical.classicduels.commands.admin.arena.CreateCommand.java
 * Now fireworks will stop spawning on restarting stage.
 * Now sending arena creation message centered.
 * Performance improvements.

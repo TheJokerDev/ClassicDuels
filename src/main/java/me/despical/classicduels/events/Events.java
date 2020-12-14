@@ -60,13 +60,6 @@ public class Events implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onItemSwap(PlayerSwapHandItemsEvent e) {
-		if (ArenaRegistry.isInArena(e.getPlayer())) {
-			e.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);

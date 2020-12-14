@@ -41,6 +41,7 @@ import me.despical.classicduels.utils.*;
 import me.despical.commonsbox.compat.VersionResolver;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import org.bstats.bukkit.Metrics;
@@ -157,6 +158,8 @@ public class Main extends JavaPlugin {
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 					player.setWalkSpeed(0.2f);
 				}
+
+				AttributeUtils.resetAttackCooldown(player);
 			}
 		}
 
@@ -186,6 +189,7 @@ public class Main extends JavaPlugin {
 		new JoinEvent(this);
 		new ChatEvents(this);
 		new Events(this);
+		new CraftEvents(this);
 		new LobbyEvent(this);
 		new SpectatorItemEvents(this);
 
