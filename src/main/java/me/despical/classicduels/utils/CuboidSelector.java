@@ -19,7 +19,6 @@
 package me.despical.classicduels.utils;
 
 import me.despical.classicduels.Main;
-import me.despical.classicduels.handlers.ChatManager;
 import me.despical.commonsbox.item.ItemBuilder;
 import me.despical.commonsbox.item.ItemUtils;
 import org.bukkit.Location;
@@ -45,12 +44,15 @@ public class CuboidSelector implements Listener {
 	}
 
 	public void giveSelectorWand(Player p) {
-		ChatManager chatManager = plugin.getChatManager();
-		ItemStack stack = new ItemBuilder(Material.BLAZE_ROD).name(chatManager.colorRawMessage("&6&lArea selector")).build();
+		ItemStack stack = new ItemBuilder(Material.BLAZE_ROD)
+			.name("&6&lArea selector")
+			.lore("&eLEFT CLICK to select first corner.")
+			.lore("&eRIGHT CLICK to select second corner.")
+			.build();
 		p.getInventory().addItem(stack);
 
-		p.sendMessage(chatManager.colorRawMessage(chatManager.getPrefix() + "&eYou received area selector wand!"));
-		p.sendMessage(chatManager.colorRawMessage(chatManager.getPrefix() + "&eSelect bottom corner using left click!"));
+		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&eYou received area selector wand!"));
+		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&eSelect bottom corner using left click!"));
 	}
 
 	public Selection getSelection(Player p) {

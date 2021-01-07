@@ -30,7 +30,6 @@ import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -60,11 +59,12 @@ public class SignManager implements Listener {
 	private final Main plugin;
 	private final List<ArenaSign> arenaSigns = new ArrayList<>();
 	private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+	private final FileConfiguration config;
 	private final List<String> signLines;
 
 	public SignManager(Main plugin) {
 		this.plugin = plugin;
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
+		this.config = ConfigUtils.getConfig(plugin, "arenas");
 
 		gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, plugin.getChatManager().colorMessage("Signs.Game-States.Waiting"));
 		gameStateToString.put(ArenaState.STARTING, plugin.getChatManager().colorMessage("Signs.Game-States.Starting"));
@@ -72,7 +72,7 @@ public class SignManager implements Listener {
 		gameStateToString.put(ArenaState.ENDING, plugin.getChatManager().colorMessage("Signs.Game-States.Ending"));
 		gameStateToString.put(ArenaState.RESTARTING, plugin.getChatManager().colorMessage("Signs.Game-States.Restarting"));
 		gameStateToString.put(ArenaState.INACTIVE, plugin.getChatManager().colorMessage("Signs.Game-States.Inactive"));
-		signLines = config.getStringList("Signs.Lines");
+		signLines = plugin.getChatManager().getStringList("Signs.Lines");
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -101,7 +101,6 @@ public class SignManager implements Listener {
 			e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
 
 			String location = LocationSerializer.locationToString(e.getBlock().getLocation());
-			FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 			List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
 			locs.add(location);
 
@@ -144,7 +143,6 @@ public class SignManager implements Listener {
 
 		arenaSigns.remove(arenaSign);
 
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		String location = LocationSerializer.locationToString(e.getBlock().getLocation());
 
 		for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
@@ -163,11 +161,11 @@ public class SignManager implements Listener {
 			}
 		}
 
-		e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+		e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&cCouldn't remove sign from configuration! Please do this manually!"));
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-	public void onJoinAttempt(final PlayerInteractEvent e) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onJoinAttempt(PlayerInteractEvent e) {
 		ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
 
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign && arenaSign != null) {
@@ -200,7 +198,6 @@ public class SignManager implements Listener {
 		long start = System.currentTimeMillis();
 
 		arenaSigns.clear();
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		for (String path : config.getConfigurationSection("instances").getKeys(false)) {
 			for (String sign : config.getStringList("instances." + path + ".signs")) {

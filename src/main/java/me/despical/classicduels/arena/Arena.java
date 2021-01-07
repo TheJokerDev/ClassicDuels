@@ -234,6 +234,11 @@ public class Arena extends BukkitRunnable {
 					return;
 				}
 
+				for (Player player : players) {
+					Player opponent = Bukkit.getPlayer(scoreboardManager.getOpponent(plugin.getUserManager().getUser(player)));
+					player.setCompassTarget(opponent.getLocation());
+				}
+
 				setTimer(getTimer() - 1);
 				break;
 			case ENDING:

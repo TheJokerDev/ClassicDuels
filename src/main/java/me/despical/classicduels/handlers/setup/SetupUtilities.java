@@ -18,11 +18,9 @@
 
 package me.despical.classicduels.handlers.setup;
 
-import me.despical.classicduels.Main;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Despical
@@ -32,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class SetupUtilities {
 
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final FileConfiguration config;
 
 	SetupUtilities(FileConfiguration config) {
@@ -42,12 +39,12 @@ public class SetupUtilities {
 	public String isOptionDoneBool(String path) {
 		if (config.isSet(path)) {
 			if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.locationFromString(config.getString(path)))) {
-				return plugin.getChatManager().colorRawMessage("&c&l✘ Not Completed");
+				return "&c&l✘ Not Completed";
 			}
 
-			return plugin.getChatManager().colorRawMessage("&a&l✔ Completed");
+			return "&a&l✔ Completed";
 		}
 
-		return plugin.getChatManager().colorRawMessage("&c&l✘ Not Completed");
+		return "&c&l✘ Not Completed";
 	}
 }

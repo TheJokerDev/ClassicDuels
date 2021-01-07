@@ -77,13 +77,15 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if (!validateIfPluginShouldStart()) {
+			forceDisable = true;
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		saveDefaultConfig();
 
-		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages"));
+		Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug-Messages"));
 		Debugger.debug("Initialization start");
 
 		if (getConfig().getBoolean("Developer-Mode")) {
@@ -107,19 +109,13 @@ public class Main extends JavaPlugin {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server version is not supported by Classic Duels!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
-			forceDisable = true;
-			getServer().getPluginManager().disablePlugin(this);
 			return false;
-		}
-
-		try {
+		} try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (ClassNotFoundException e) {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server software is not supported by Classic Duels!");
 			Debugger.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
-			forceDisable = true;
-			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		}
 
@@ -149,6 +145,7 @@ public class Main extends JavaPlugin {
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.teleportToEndLocation(player);
 				player.setFlySpeed(0.1f);
+				player.setWalkSpeed(0.2f);
 
 				if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(this, player);
@@ -156,7 +153,6 @@ public class Main extends JavaPlugin {
 					player.getInventory().clear();
 					player.getInventory().setArmorContents(null);
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-					player.setWalkSpeed(0.2f);
 				}
 
 				AttributeUtils.resetAttackCooldown(player);
@@ -198,9 +194,10 @@ public class Main extends JavaPlugin {
 		signManager.loadSigns();
 		signManager.updateSigns();
 		rewardsFactory = new RewardsFactory(this);
-		registerSoftDependenciesAndServices();
 		commandHandler = new CommandHandler(this);
 		cuboidSelector = new CuboidSelector(this);
+
+		registerSoftDependenciesAndServices();
 	}
 
 	private void registerSoftDependenciesAndServices() {
@@ -334,7 +331,9 @@ public class Main extends JavaPlugin {
 				continue;
 			}
 
-			Arrays.stream(StatsStorage.StatisticType.values()).forEach(stat -> userManager.getDatabase().saveStatistic(user, stat));
+			for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+				userManager.getDatabase().saveStatistic(user, stat);
+			}
 		}
 	}
 }

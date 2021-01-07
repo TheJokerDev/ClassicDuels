@@ -40,7 +40,8 @@ public class Debugger {
 	private static boolean deep = false;
 	private static final Logger logger = Logger.getLogger("Classic Duels");
 
-	private Debugger() {}
+	private Debugger() {
+	}
 
 	public static void setEnabled(boolean enabled) {
 		Debugger.enabled = enabled;
@@ -55,7 +56,7 @@ public class Debugger {
 	}
 
 	public static void sendConsoleMessage(String message) {
-		if (message.contains("#") && VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+		if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1) && message.contains("#")) {
 			message = StringMatcher.matchColorRegex(message);
 		}
 

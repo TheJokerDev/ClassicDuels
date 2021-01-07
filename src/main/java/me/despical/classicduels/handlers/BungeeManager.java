@@ -21,6 +21,7 @@ package me.despical.classicduels.handlers;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.despical.classicduels.Main;
+import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaManager;
 import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.classicduels.arena.ArenaState;
@@ -47,11 +48,12 @@ public class BungeeManager implements Listener {
 
 	private final Main plugin;
 	private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+	private final FileConfiguration config;
 	private final String motd;
 
 	public BungeeManager(Main plugin) {
 		this.plugin = plugin;
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "bungee");
+		this.config = ConfigUtils.getConfig(plugin, "bungee");
 		ChatManager chatManager = plugin.getChatManager();
 
 		gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, chatManager.colorRawMessage(config.getString("MOTD.Game-States.Inactive", "Inactive")));
@@ -66,7 +68,7 @@ public class BungeeManager implements Listener {
 	}
 
 	public void connectToHub(Player player) {
-		if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
+		if (!config.getBoolean("Connect-To-Hub", true)) {
 			return;
 		}
 
@@ -77,17 +79,17 @@ public class BungeeManager implements Listener {
 		player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 	}
 
-	private ArenaState getArenaState() {
-		return ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).getArenaState();
+	private Arena getArena() {
+		return ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());
 	}
 
 	private String getHubServerName() {
-		return ConfigUtils.getConfig(plugin, "bungee").getString("Hub");
+		return config.getString("Hub");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onServerListPing(ServerListPingEvent event) {
-		if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false)) {
+		if (!config.getBoolean("MOTD.Manager")) {
 			return;
 		}
 
@@ -96,13 +98,13 @@ public class BungeeManager implements Listener {
 		}
 
 		event.setMaxPlayers(2);
-		event.setMotd(motd.replace("%state%", gameStateToString.get(getArenaState())));
+		event.setMotd(motd.replace("%state%", gameStateToString.get(getArena().getArenaState())));
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onJoin(final PlayerJoinEvent event) {
 		event.setJoinMessage("");
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena())), 1L);
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), getArena()), 1L);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -110,7 +112,7 @@ public class BungeeManager implements Listener {
 		event.setQuitMessage("");
 
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
-			ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
+			ArenaManager.leaveAttempt(event.getPlayer(), getArena());
 		}
 	}
 }

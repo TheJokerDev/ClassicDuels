@@ -46,7 +46,7 @@ public class PermissionManager {
 	}
 
 	private static void setupPermissions() {
-		PermissionManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "tntrun.join.<arena>"));
+		PermissionManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "cd.join.<arena>"));
 
 		Debugger.debug("Basic permissions registered");
 	}

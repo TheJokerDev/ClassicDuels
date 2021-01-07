@@ -1,3 +1,19 @@
+### 1.0.3 Release (07.01.2021)
+* Added multi-world support.
+* Added new lore messages to cuboid selector item.
+* Added new value to scoreboard contents which shows opponent's direction with arrows.
+* Removed default false booleans.
+* Fixed Hex color codes for debugger in Minecraft 1.16+.
+* Fixed default join permission.
+* Changed default leave item to red bed from white bed.
+* Changed PAPI's plugin version with Bukkit's.
+* Changed some debugger keys.
+* Now list command replaces values faster.
+* Disabled locales in debug mode.
+* Updated license header.
+
+** Also contains more news from 1.0.2's hotfix releases.**
+
 ### 1.0.2 Release (14.11.2020 - 18.11.2020)
 * Added license header.
 * Added area selection to clear arena after game.

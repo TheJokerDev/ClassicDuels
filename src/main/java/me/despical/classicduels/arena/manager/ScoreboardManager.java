@@ -24,6 +24,7 @@ import me.despical.classicduels.api.StatsStorage;
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaState;
 import me.despical.classicduels.user.User;
+import me.despical.classicduels.utils.Utils;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
 import me.despical.commonsbox.scoreboard.common.EntryBuilder;
 import me.despical.commonsbox.scoreboard.type.Entry;
@@ -135,6 +136,12 @@ public class ScoreboardManager {
 		formattedLine = StringUtils.replace(formattedLine, "%opponent%", getOpponent(user));
 		formattedLine = StringUtils.replace(formattedLine, "%opponent_health%", String.valueOf(Bukkit.getPlayerExact(getOpponent(user)) != null ? (int) Bukkit.getPlayerExact(getOpponent(user)).getHealth() : 0));
 		formattedLine = StringUtils.replace(formattedLine, "%win_streak%", String.valueOf(user.getStat(StatsStorage.StatisticType.WIN_STREAK)));
+
+		Player player = Bukkit.getPlayer(getOpponent(user));
+
+		if (player != null) {
+			formattedLine = StringUtils.replace(formattedLine, "%opponent_direction%", Utils.getCardinalDirection(player));
+		}
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);

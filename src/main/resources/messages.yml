@@ -56,7 +56,7 @@ Scoreboard:
       - "&fTime Left: %formatted_time%"
       - ""
       - "&f&lOpponent:"
-      - "  &7%opponent% &a%opponent_health%&c❤"
+      - " %opponent_direction% &7%opponent% &a%opponent_health%&c❤"
       - ""
       - "&fCurrent Streak: &a%win_streak%"
       - ""

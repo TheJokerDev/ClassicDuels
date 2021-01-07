@@ -85,7 +85,9 @@ public class ExceptionLogHandler extends Handler {
 
 		stacktrace.append("\n");
 
-		Arrays.stream(exception.getStackTrace()).forEach(str -> stacktrace.append(str.toString()).append("\n"));
+		for (StackTraceElement str : exception.getStackTrace()) {
+			stacktrace.append(str.toString()).append("\n");
+		}
 
 		plugin.getLogger().log(Level.WARNING, "[Reporter service] <<-----------------------------[START]----------------------------->>");
 		plugin.getLogger().log(Level.WARNING, stacktrace.toString());

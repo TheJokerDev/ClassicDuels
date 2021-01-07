@@ -21,7 +21,6 @@ package me.despical.classicduels.handlers.items;
 import me.despical.classicduels.Main;
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -50,9 +49,7 @@ public class SpecialItem {
 	}
 
 	public static void loadAll() {
-		new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
-			ChatColor.GRAY + "Click to teleport to hub"
-		}, XMaterial.WHITE_BED.parseMaterial(), 8);
+		new SpecialItem("Leave").load("&cLeave", new String[] {"&7Click to teleport to hub"}, XMaterial.RED_BED.parseMaterial(), 8);
 	}
 
 	public void load(String displayName, String[] lore, Material material, int slot) {
@@ -65,12 +62,12 @@ public class SpecialItem {
 			config.set(name + ".slot", slot);
 		}
 
-		ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "items");
+		ConfigUtils.saveConfig(plugin, config, "items");
 		ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase()).orElse(XMaterial.STONE).parseItem();
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname")));
 
-		List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(str -> plugin.getChatManager().colorRawMessage(str)).collect(Collectors.toList());
+		List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage).collect(Collectors.toList());
 
 		meta.setLore(colorizedLore);
 		stack.setItemMeta(meta);

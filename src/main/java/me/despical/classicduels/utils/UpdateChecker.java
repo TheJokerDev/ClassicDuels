@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  * are inconsistent with what is published on SpigotMC, it may be due to SpiGet's cache.
  * Results will be updated in due time.
  *
- * @author Parker Hawke - 2008Choco
+ * @author Despical and 2008Choco
  */
 public final class UpdateChecker {
 
@@ -71,6 +71,7 @@ public final class UpdateChecker {
 
 		return (secondSplit.length > firstSplit.length) ? second : first;
 	};
+
 	private static UpdateChecker instance;
 	private final JavaPlugin plugin;
 	private final int pluginID;

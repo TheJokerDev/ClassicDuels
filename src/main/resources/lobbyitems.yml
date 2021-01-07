@@ -3,5 +3,5 @@ Leave:
   displayname: "&c&lReturn to Lobby &7(Right Click)"
   lore:
     - "&7Right-click to leave to the lobby"
-  material-name: BED
+  material-name: RED_BED
   slot: 8

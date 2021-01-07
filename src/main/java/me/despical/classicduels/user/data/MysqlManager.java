@@ -26,7 +26,6 @@ import me.despical.classicduels.utils.MessageUtils;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -92,7 +91,6 @@ public class MysqlManager implements UserDatabase {
 		}
 
 		String finalUpdate = update.toString();
-
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
 	}
 
@@ -119,8 +117,7 @@ public class MysqlManager implements UserDatabase {
 					statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
 
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-						if (!stat.isPersistent())
-							continue;
+						if (!stat.isPersistent()) continue;
 						user.setStat(stat, 0);
 					}
 				}
@@ -131,8 +128,7 @@ public class MysqlManager implements UserDatabase {
 	}
 
 	public String getTableName() {
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
-		return config.getString("table", "playerstats");
+		return ConfigUtils.getConfig(plugin, "mysql").getString("table", "playerstats");
 	}
 
 	public MysqlDatabase getDatabase() {
