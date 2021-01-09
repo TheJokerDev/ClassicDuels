@@ -43,6 +43,10 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
 /**
  * @author Despical
  * @since 1.0.0
@@ -314,10 +318,10 @@ public class Events implements Listener {
 			return;
 		}
 
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
 		ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+		Player player = event.getPlayer();
 
-		if (arena == null || !ItemUtils.isNamed(itemStack)) {
+		if (!ArenaRegistry.isInArena(player) || !ItemUtils.isNamed(itemStack)) {
 			return;
 		}
 
@@ -330,11 +334,25 @@ public class Events implements Listener {
 		if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Play-Again")) {
 			event.setCancelled(true);
 
-			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-				plugin.getBungeeManager().connectToHub(event.getPlayer());
-			} else {
-				ArenaManager.leaveAttempt(event.getPlayer(), arena);
+			Map<Arena, Integer> arenas = new HashMap<>();
+
+			for (Arena arena : ArenaRegistry.getArenas()) {
+				if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) && arena.getPlayers().size() < 2) {
+					arenas.put(arena, arena.getPlayers().size());
+				}
 			}
+
+			if (!arenas.isEmpty()) {
+				Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
+				Arena arena = sorted.findFirst().get().getKey();
+
+				if (arena != null) {
+					ArenaManager.joinAttempt(player, arena);
+					return;
+				}
+			}
+
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Free-Arenas"));
 		}
 	}
 
