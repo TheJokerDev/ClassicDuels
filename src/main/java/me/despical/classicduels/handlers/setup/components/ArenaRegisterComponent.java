@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,6 +125,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			for (Sign sign : signsToUpdate) {
 				plugin.getSignManager().getArenaSigns().add(new ArenaSign(sign, arena));
+				plugin.getSignManager().updateSigns();
 			}
 		}), 8, 0);
 	}

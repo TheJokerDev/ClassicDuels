@@ -3,7 +3,7 @@
 **I'm sincerely glad to everyone who supported our project every time!**
 **Contributors are listed in alphabetical order, every contributor is equally important!**
 
-* [Breakthrough](https://www.spigotmc.org/members/breakthrough.468521/) - Author
+* [Breakthrough](https://www.spigotmc.org/members/breakthrough.468521/) - Contributor
 * [Despical](https://www.spigotmc.org/members/despical.615094/) - Owner & Author
 * [Dreandor](https://www.spigotmc.org/members/dreandor.643921/) - German translator
 

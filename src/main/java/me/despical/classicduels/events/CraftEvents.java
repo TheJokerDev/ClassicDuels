@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package me.despical.classicduels.events;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.commonsbox.compat.VersionResolver;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
@@ -34,16 +34,25 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
  */
 public class CraftEvents implements Listener {
 
+	private final Main plugin;
+
 	public CraftEvents(Main plugin) {
+		this.plugin = plugin;
+
 		if (VersionResolver.isCurrentHigher(VersionResolver.ServerVersion.v1_9_R2)) {
-			plugin.getServer().getPluginManager().registerEvents(this, plugin);
+			registerItemSwapEvent();
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onItemSwap(PlayerSwapHandItemsEvent e) {
-		if (ArenaRegistry.isInArena(e.getPlayer())) {
-			e.setCancelled(true);
-		}
+	public void registerItemSwapEvent() {
+		Bukkit.getPluginManager().registerEvents(new Listener() {
+
+			@EventHandler
+			public void onItemSwap(PlayerSwapHandItemsEvent e) {
+				if (ArenaRegistry.isInArena(e.getPlayer())) {
+					e.setCancelled(true);
+				}
+			}
+		}, plugin);
 	}
 }

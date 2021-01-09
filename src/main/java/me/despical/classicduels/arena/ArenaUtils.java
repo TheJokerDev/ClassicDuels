@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,13 @@
 
 package me.despical.classicduels.arena;
 
+import me.despical.classicduels.ConfigPreferences;
 import me.despical.classicduels.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 /**
  * @author Despical
@@ -57,6 +61,45 @@ public class ArenaUtils {
 
 			player.hidePlayer(plugin, players);
 			players.hidePlayer(plugin, player);
+		}
+	}
+
+	public static void updateNameTagsVisibility(final Player p) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+			return;
+		}
+
+		for (Player players : plugin.getServer().getOnlinePlayers()) {
+			Arena arena = ArenaRegistry.getArena(players);
+
+			if (arena == null) {
+				continue;
+			}
+
+			Scoreboard scoreboard = players.getScoreboard();
+
+			if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+				scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+			}
+
+			Team team = scoreboard.getTeam("CDHide");
+
+			if (team == null) {
+				team = scoreboard.registerNewTeam("CDHide");
+			}
+
+			team.setAllowFriendlyFire(false);
+			team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+
+			if (arena.getArenaState() == ArenaState.IN_GAME) {
+				team.addEntry(p.getName());
+			} else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+				team.removeEntry(p.getName());
+			} else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+				team.removeEntry(p.getName());
+			}
+
+			players.setScoreboard(scoreboard);
 		}
 	}
 }

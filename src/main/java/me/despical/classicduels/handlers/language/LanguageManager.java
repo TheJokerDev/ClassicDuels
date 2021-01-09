@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ public class LanguageManager {
 	public LanguageManager(Main plugin) {
 		this.plugin = plugin;
 
+		new LanguageMigrator(plugin);
 		registerLocales();
 		setupLocale();
 		init();
@@ -95,10 +96,6 @@ public class LanguageManager {
 		}
 
 		Debugger.sendConsoleMessage("[Classic Duels] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
-	}
-
-	public boolean isDefaultLanguageUsed() {
-		return pluginLocale.getName().equals("English");
 	}
 
 	public Locale getPluginLocale() {

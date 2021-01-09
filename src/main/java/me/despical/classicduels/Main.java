@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package me.despical.classicduels;
 import me.despical.classicduels.api.StatsStorage;
 import me.despical.classicduels.arena.Arena;
 import me.despical.classicduels.arena.ArenaRegistry;
+import me.despical.classicduels.arena.ArenaUtils;
 import me.despical.classicduels.commands.CommandHandler;
 import me.despical.classicduels.events.*;
 import me.despical.classicduels.events.spectator.SpectatorEvents;
@@ -102,6 +103,11 @@ public class Main extends JavaPlugin {
 		checkUpdate();
 
 		Debugger.debug("Initialization finished took {0} ms", System.currentTimeMillis() - start);
+
+		if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+			Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+				Bukkit.getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
+		}
 	}
 
 	private boolean validateIfPluginShouldStart() {
@@ -261,7 +267,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupFiles() {
-		for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "messages")) {
+		for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "items", "mysql", "messages")) {
 			File file = new File(getDataFolder() + File.separator + fileName + ".yml");
 
 			if (!file.exists()) {

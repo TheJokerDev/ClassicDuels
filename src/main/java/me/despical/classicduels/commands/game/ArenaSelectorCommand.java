@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,10 @@ import me.despical.classicduels.arena.ArenaRegistry;
 import me.despical.classicduels.commands.SubCommand;
 import me.despical.classicduels.handlers.ChatManager;
 import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.number.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,7 +37,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Despical
@@ -50,13 +50,14 @@ import java.util.List;
 public class ArenaSelectorCommand extends SubCommand implements Listener {
 
 	private final ChatManager chatManager;
+	private final Map<Integer, Arena> mappings = new HashMap<>();
 
 	public ArenaSelectorCommand() {
 		super("arenas");
 
 		setPermission("cd.arenas");
 		chatManager = plugin.getChatManager();
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		registerInventoryClickEvent();
 	}
 
 	@Override
@@ -79,8 +80,12 @@ public class ArenaSelectorCommand extends SubCommand implements Listener {
 		}
 
 		Inventory inventory = Bukkit.createInventory(player, NumberUtils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inventory-Title"));
+		int slot = 0;
+
+		mappings.clear();
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
+			mappings.put(slot, arena);
 			ItemStack itemStack;
 
 			switch (arena.getArenaState()) {
@@ -96,18 +101,18 @@ public class ArenaSelectorCommand extends SubCommand implements Listener {
 			}
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(arena.getId());
+			itemMeta.setDisplayName(formatItem(plugin.getChatManager().colorMessage("Arena-Selector.Item.Name"), arena));
 
 			ArrayList<String> lore = new ArrayList<>();
-			FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
 
-			for (String string : config.getStringList("Arena-Selector.Item.Lore")) {
+			for (String string : plugin.getChatManager().getStringList("Arena-Selector.Item.Lore")) {
 				lore.add(formatItem(string, arena));
 			}
 
 			itemMeta.setLore(lore);
 			itemStack.setItemMeta(itemMeta);
 			inventory.addItem(itemStack);
+			slot++;
 		}
 
 		player.openInventory(inventory);
@@ -128,26 +133,31 @@ public class ArenaSelectorCommand extends SubCommand implements Listener {
 		return formatted;
 	}
 
-	@EventHandler
-	public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-		if (!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inventory-Title"))) {
-			return;
-		}
+	private void registerInventoryClickEvent() {
+		Bukkit.getPluginManager().registerEvents(new Listener() {
 
-		if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
-			return;
-		}
+			@EventHandler
+			public void onArenaSelectorMenuClick(InventoryClickEvent e) {
+				if (!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inventory-Title"))) {
+					return;
+				}
 
-		Player player = (Player) e.getWhoClicked();
-		player.closeInventory();
+				if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+					return;
+				}
 
-		Arena arena = ArenaRegistry.getArena(e.getCurrentItem().getItemMeta().getDisplayName());
+				Player player = (Player) e.getWhoClicked();
+				player.closeInventory();
 
-		if (arena != null) {
-			ArenaManager.joinAttempt(player, arena);
-		} else {
-			player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
-		}
+				Arena arena = mappings.get(e.getRawSlot());
+
+				if (arena != null) {
+					ArenaManager.joinAttempt(player, arena);
+				} else {
+					player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
+				}
+			}
+		}, plugin);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -196,6 +196,7 @@ public class Arena extends BukkitRunnable {
 						player.setGameMode(GameMode.SURVIVAL);
 
 						ArenaUtils.hidePlayersOutsideTheGame(player, this);
+						ArenaUtils.updateNameTagsVisibility(player);
 
 						setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 540));
 
@@ -236,7 +237,10 @@ public class Arena extends BukkitRunnable {
 
 				for (Player player : players) {
 					Player opponent = Bukkit.getPlayer(scoreboardManager.getOpponent(plugin.getUserManager().getUser(player)));
-					player.setCompassTarget(opponent.getLocation());
+
+					if (opponent != null) {
+						player.setCompassTarget(opponent.getLocation());
+					}
 				}
 
 				setTimer(getTimer() - 1);
@@ -396,6 +400,8 @@ public class Arena extends BukkitRunnable {
 		this.arenaState = arenaState;
 		CDGameStateChangeEvent gameStateChangeEvent = new CDGameStateChangeEvent(this, getArenaState());
 		Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+
+		plugin.getSignManager().updateSigns();
 	}
 
 	/**

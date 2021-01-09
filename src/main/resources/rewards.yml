@@ -33,19 +33,19 @@
 rewards:
   # Commands performed when player kills enemy
   kills:
-    - say Good game!
+    - p:say Good game!
   # Commands performed when player dies
   death:
-    - Hes hacking report it!!!
+    - p:Hes hacking report it!!!
   # Commands performed when game finishes
   endgame:
-    - say %mapname% has ended!
-    - say Ooh and there were playing %players% players
+    - p:say %mapname% has ended!
+    - p:say Ooh and there were playing %players% players
   # Commands performed when player wins the game
   win:
     - eco give %player% 2
-    - say I won the game!
+    - p:say I won the game!
   # Commands performed when player loses the game
   lose:
     - chance(10):eco give %player% 8
-    - say I lost the game!
+    - p:say I lost the game!

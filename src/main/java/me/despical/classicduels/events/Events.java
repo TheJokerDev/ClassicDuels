@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -272,12 +272,13 @@ public class Events implements Listener {
 		player.setAllowFlight(true);
 		player.setFlying(true);
 		player.getInventory().clear();
-		player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
-		player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
-		player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+		player.getInventory().setItem(SpecialItemManager.getSpecialItem("Teleporter").getSlot(), SpecialItemManager.getSpecialItem("Teleporter").getItemStack());
+		player.getInventory().setItem(SpecialItemManager.getSpecialItem("Spectator-Settings").getSlot(), SpecialItemManager.getSpecialItem("Spectator-Settings").getItemStack());
+		player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
+		player.getInventory().setItem(SpecialItemManager.getSpecialItem("Play-Again").getSlot(), SpecialItemManager.getSpecialItem("Play-Again").getItemStack());
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onLeave(PlayerInteractEvent event) {
 		if (event.getAction() == Action.PHYSICAL) {
 			return;
@@ -308,6 +309,36 @@ public class Events implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayAgain(PlayerInteractEvent event) {
+		if (event.getAction() == Action.PHYSICAL) {
+			return;
+		}
+
+		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+		ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+
+		if (arena == null || !ItemUtils.isNamed(itemStack)) {
+			return;
+		}
+
+		String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
+
+		if (key == null) {
+			return;
+		}
+
+		if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Play-Again")) {
+			event.setCancelled(true);
+
+			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+				plugin.getBungeeManager().connectToHub(event.getPlayer());
+			} else {
+				ArenaManager.leaveAttempt(event.getPlayer(), arena);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
 		if (event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
 			event.setFoodLevel(20);
@@ -318,10 +349,8 @@ public class Events implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
+			event.setCancelled(true);
 		}
-
-		event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -409,6 +438,10 @@ public class Events implements Listener {
 		Player victim = (Player) e.getEntity();
 
 		if (!ArenaRegistry.isInArena(victim)) {
+			return;
+		}
+
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
 			return;
 		}
 

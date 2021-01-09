@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,11 +49,14 @@ public class SpecialItem {
 	}
 
 	public static void loadAll() {
-		new SpecialItem("Leave").load("&cLeave", new String[] {"&7Click to teleport to hub"}, XMaterial.RED_BED.parseMaterial(), 8);
+		new SpecialItem("Leave").load("&c&lReturn to Lobby &7(Right Click)", new String[] {"&7Right-click to leave to the lobby!"}, XMaterial.RED_BED.parseMaterial(), 8);
+		new SpecialItem("Teleporter").load("&a&lTeleporter &7(Right Click) ", new String[] {"&7Right-click to spectate players!"}, XMaterial.COMPASS.parseMaterial(), 0);
+		new SpecialItem("Spectator-Settings").load("&b&lSpectator Settings &7(Right Click)", new String[] {"&7Right-click to change your spectator settings!"}, XMaterial.REPEATER.parseMaterial(), 4);
+		new SpecialItem("Play-Again").load("&b&lPlay Again &7(Right Click)", new String[] {"&7Right-click to play another game!"}, XMaterial.PAPER.parseMaterial(), 7);
 	}
 
 	public void load(String displayName, String[] lore, Material material, int slot) {
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "items");
 
 		if (!config.contains(name)) {
 			config.set(name + ".displayname", displayName);

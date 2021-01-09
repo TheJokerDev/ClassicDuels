@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class ChatManager {
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = colorRawMessage(config.getString("In-Game.Plugin-Prefix"));
+		this.prefix = colorMessage("In-Game.Plugin-Prefix");
 	}
 
 	public String getPrefix() {
@@ -82,6 +82,7 @@ public class ChatManager {
 
 	public String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
+
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = colorRawMessage(formatPlaceholders(returnString, arena));
 
@@ -114,26 +115,26 @@ public class ChatManager {
 		return config.getStringList(path);
 	}
 
-	public void broadcastAction(Arena a, Player p, ActionType action) {
+	public void broadcastAction(Arena arena, Player player, ActionType action) {
 		String message;
 
 		switch (action) {
 			case JOIN:
-				message = formatMessage(a, colorMessage("In-Game.Messages.Join"), p);
+				message = formatMessage(arena, colorMessage("In-Game.Messages.Join"), player);
 				break;
 			case LEAVE:
-				message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
+				message = formatMessage(arena, colorMessage("In-Game.Messages.Leave"), player);
 				break;
 			default:
 				return;
 		}
 
-		a.broadcast(message);
+		arena.broadcast(message);
 	}
 
 	public void reloadConfig() {
 		config = ConfigUtils.getConfig(plugin, "messages");
-		prefix = colorRawMessage(config.getString("In-Game.Plugin-Prefix"));
+		prefix = colorMessage("In-Game.Plugin-Prefix");
 	}
 
 	public enum ActionType {

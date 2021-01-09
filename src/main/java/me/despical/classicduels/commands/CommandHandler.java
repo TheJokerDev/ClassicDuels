@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,8 +68,10 @@ public class CommandHandler implements CommandExecutor {
 		registerSubCommand(new LayoutCommand());
 		registerSubCommand(new LeaderBoardCommand());
 
-		plugin.getCommand("classicduels").setExecutor(this);
-		plugin.getCommand("classicduels").setTabCompleter(new TabCompletion(this));
+		Optional.ofNullable(plugin.getCommand("classicduels")).ifPresent(cd -> {
+			cd.setExecutor(this);
+			cd.setTabCompleter(new TabCompletion(this));
+		});
 	}
 
 	public void registerSubCommand(SubCommand subCommand) {

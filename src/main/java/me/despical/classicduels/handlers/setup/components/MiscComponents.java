@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,10 +91,6 @@ public class MiscComponents implements SetupComponent {
 			e.getWhoClicked().closeInventory();
 			Location location = player.getTargetBlock(null, 10).getLocation();
 
-			if (!location.getWorld().getName().equalsIgnoreCase("world")) {
-				player.sendMessage("&c&l✖ &cWarning | Placing signs in different from default world can cause problems when loading signs.");
-			}
-
 			if (!(location.getBlock().getState() instanceof Sign)) {
 				player.sendMessage(plugin.getChatManager().colorMessage("Commands.Look-Sign"));
 				return;
@@ -106,6 +102,7 @@ public class MiscComponents implements SetupComponent {
 			}
 
 			plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
+			plugin.getSignManager().updateSigns();
 			player.sendMessage(plugin.getChatManager().colorMessage("Signs.Sign-Created"));
 
 			String signLoc = LocationSerializer.locationToString(location);

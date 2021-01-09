@@ -1,18 +1,35 @@
-### 1.0.3 Release (07.01.2021)
+### 1.0.3 Release (07.01.2021 - 09.01.2021)
+* Added option to enable fall damage.
+* Added migrator for configuration files.
 * Added multi-world support.
+* Added play again item.
+* Added more option to customize for spectator and lobby items.
 * Added new lore messages to cuboid selector item.
 * Added new value to scoreboard contents which shows opponent's direction with arrows.
-* Removed default false booleans.
+* Fixed possible null pointer exception on registering commands.
+* Fixed default script engine commands in rewards file.
+* Fixed hiding nametags.
+* Fixed joining through a sign while player is holding leave item.
+* Fixed can not spectating a usual game.
 * Fixed Hex color codes for debugger in Minecraft 1.16+.
+* Fixed slot for lobby items.
+* Fixed default game duration in summary messages.
 * Fixed default join permission.
+* Removed sign updating scheduler for timings.
+* Removed `LanguageManager#isDefaultLanguageUsed` method.
+* Removed default false booleans.
+* Removed unused messages.
+* Changed events in efficient way which requires specific versions.
 * Changed default leave item to red bed from white bed.
 * Changed PAPI's plugin version with Bukkit's.
 * Changed some debugger keys.
+* Now item names in arena selector gui are fully customizable.
 * Now list command replaces values faster.
+* Improved tab completion.
 * Disabled locales in debug mode.
 * Updated license header.
 
-** Also contains more news from 1.0.2's hotfix releases.**
+** Also contains more news from previous hotfix releases whose are in 1.0.2 logs.**
 
 ### 1.0.2 Release (14.11.2020 - 18.11.2020)
 * Added license header.

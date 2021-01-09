@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,9 +57,10 @@ public class ConfigPreferences {
 	public enum Option {
 		BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false),
 		CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true), DATABASE_ENABLED("DatabaseActivated", false),
+		DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), DISABLE_LEVEL_COUNTDOWN("Disable-Level-Countdown", false),
 		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
 		INVENTORY_MANAGER_ENABLED("InventoryManager", true), PICKUP_ARROWS("Pickup-Arrows", true),
-		DISABLE_LEVEL_COUNTDOWN("Disable-Level-Countdown", false);
+		NAMETAGS_HIDDEN("Nametags-Hidden", false);
 
 		private final String path;
 		private final boolean def;

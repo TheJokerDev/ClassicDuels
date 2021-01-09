@@ -50,6 +50,9 @@ ChatFormat-Enabled: true
 # It will disable the separated chat, for example
 Disable-Separate-Chat: false
 
+# Should players get fall damage?
+Disable-Fall-Damage: true
+
 # Which blocks should we remove in game area after game finishes.
 # Also the arrows will be removed after the game as default.
 Whitelisted-Blocks:
@@ -109,6 +112,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't edit it. But who's stopping you? It's your server!
-File-Version: 0
+File-Version: 1
 
 # No way! You've reached the end! But... where's the dragon!?

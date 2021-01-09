@@ -1,6 +1,6 @@
 /*
  * Classic Duels - Eliminate your opponent to win!
- * Copyright (C) 2020 Despical and contributors
+ * Copyright (C) 2021 Despical and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,7 @@ import me.despical.classicduels.handlers.items.SpecialItemManager;
 import me.despical.classicduels.handlers.rewards.Reward;
 import me.despical.classicduels.user.User;
 import me.despical.classicduels.utils.Debugger;
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.item.ItemBuilder;
+import me.despical.commonsbox.compat.Titles;
 import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.miscellaneous.MiscUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
@@ -41,7 +39,6 @@ import me.despical.commonsbox.string.StringFormatUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -49,7 +46,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Despical
@@ -61,7 +57,8 @@ public class ArenaManager {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	private ArenaManager() {}
+	private ArenaManager() {
+	}
 
 	/**
 	 * Attempts player to join arena.
@@ -104,11 +101,6 @@ public class ArenaManager {
 			return;
 		}
 
-		if (arena.getPlayers().size() == 2) {
-			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Full-Game"));
-			return;
-		}
-
 		Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
 		User user = plugin.getUserManager().getUser(player);
 
@@ -124,8 +116,8 @@ public class ArenaManager {
 		player.setExp(1);
 		AttributeUtils.healPlayer(player);
 		player.setFoodLevel(20);
-		player.getInventory().setArmorContents(null);
 		player.getInventory().clear();
+		player.getInventory().setArmorContents(null);
 		player.setGameMode(GameMode.ADVENTURE);
 
 		Arrays.stream(StatsStorage.StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> user.setStat(stat, 0));
@@ -133,10 +125,9 @@ public class ArenaManager {
 		if (arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING) {
 			arena.teleportToLobby(player);
 			player.sendMessage(plugin.getChatManager().colorMessage("In-Game.You-Are-Spectator"));
-			player.getInventory().clear();
-			player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-			player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-			player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Teleporter").getSlot(), SpecialItemManager.getSpecialItem("Teleporter").getItemStack());
+			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Spectator-Settings").getSlot(), SpecialItemManager.getSpecialItem("Spectator-Settings").getItemStack());
+			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 			player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false));
 			ArenaUtils.hidePlayer(player, arena);
@@ -163,11 +154,11 @@ public class ArenaManager {
 		player.setAllowFlight(false);
 		arena.doBarAction(Arena.BarAction.ADD, player);
 
-		if (!plugin.getUserManager().getUser(player).isSpectator()) {
+		if (!user.isSpectator()) {
 			plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
 		}
 
-		if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+		if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
 			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
 		}
 
@@ -175,6 +166,8 @@ public class ArenaManager {
 
 		arena.getPlayers().forEach(arenaPlayer -> ArenaUtils.showPlayer(arenaPlayer, arena));
 		arena.showPlayers();
+		ArenaUtils.updateNameTagsVisibility(player);
+		plugin.getSignManager().updateSigns();
 
 		Debugger.debug("[{0}] Join attempt as player for {1} took {2} ms.", arena.getId(), player.getName(), System.currentTimeMillis() - start);
 	}
@@ -198,7 +191,7 @@ public class ArenaManager {
 
 		if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
 			if (arena.getPlayersLeft().size() - 1 == 1) {
-				ArenaManager.stopGame(false, arena);
+				stopGame(false, arena);
 				return;
 			}
 		}
@@ -215,7 +208,7 @@ public class ArenaManager {
 
 		player.setGlowing(false);
 		user.setSpectator(false);
-		player.setCollidable(true);
+		player.setCollidable(false);
 		user.removeScoreboard();
 		arena.doBarAction(Arena.BarAction.REMOVE, player);
 		AttributeUtils.healPlayer(player);
@@ -227,12 +220,6 @@ public class ArenaManager {
 		player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		player.setWalkSpeed(0.2f);
 		player.setFireTicks(0);
-
-		if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
-			arena.setArenaState(ArenaState.ENDING);
-			arena.setTimer(0);
-		}
-
 		player.setGameMode(GameMode.SURVIVAL);
 
 		for (Player players : plugin.getServer().getOnlinePlayers()) {
@@ -250,6 +237,7 @@ public class ArenaManager {
 		}
 
 		plugin.getUserManager().saveAllStatistic(user);
+		plugin.getSignManager().updateSigns();
 		Debugger.debug("[{0}] Game leave finished for {1} took {2} ms.", arena.getId(), player.getName(), System.currentTimeMillis() - start);
 	}
 
@@ -263,12 +251,9 @@ public class ArenaManager {
 	 */
 	public static void stopGame(boolean quickStop, Arena arena) {
 		Debugger.debug("[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
 		long start = System.currentTimeMillis();
 		CDGameStopEvent gameStopEvent = new CDGameStopEvent(arena);
-
 		Bukkit.getPluginManager().callEvent(gameStopEvent);
-		arena.setArenaState(ArenaState.ENDING);
 
 		if (quickStop) {
 			Bukkit.getScheduler().runTaskLater(plugin, () -> arena.setArenaState(ArenaState.ENDING), 20L * 2);
@@ -286,27 +271,28 @@ public class ArenaManager {
 				user.addStat(StatsStorage.StatisticType.WINS, 1);
 				user.addStat(StatsStorage.StatisticType.WIN_STREAK, 1);
 
-				player.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Win").replace("%player%", getWinner(arena).getName()), 5, 40, 5);
+				Titles.sendTitle(player, 5, 40, 5, plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Win").replace("%player%", getWinner(arena).getName()));
 
 				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 			} else if (user.getStat(StatsStorage.StatisticType.LOCAL_WON) == -1) {
 				user.addStat(StatsStorage.StatisticType.LOSES, 1);
 				user.setStat(StatsStorage.StatisticType.WIN_STREAK, 0);
 
-				player.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Lose").replace("%player%", getWinner(arena).getName()), 5, 40, 5);
+				Titles.sendTitle(player, 5, 40, 5, plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Lose").replace("%player%", getWinner(arena).getName()));
 
 				plugin.getRewardsFactory().performReward(player, Reward.RewardType.LOSE);
 			} else if (user.isSpectator()) {
-				player.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Lose").replace("%player%", getWinner(arena).getName()), 5, 40, 5);
+				Titles.sendTitle(player, 5, 40, 5, plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Lose").replace("%player%", getWinner(arena).getName()));
 			}
 
 			player.getInventory().clear();
 			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
-
-			List<String> summaryMessages = config.getStringList("In-Game.Messages.Game-End-Messages.Summary-Message");
+			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Play-Again").getSlot(), SpecialItemManager.getSpecialItem("Play-Again").getItemStack());
 
 			if (!quickStop) {
-				summaryMessages.forEach(msg -> MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player)));
+				for (String msg : plugin.getChatManager().getStringList("In-Game.Messages.Game-End-Messages.Summary-Message")) {
+					MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
+				}
 			}
 
 			plugin.getUserManager().saveAllStatistic(user);
@@ -318,7 +304,7 @@ public class ArenaManager {
 
 					public void run() {
 						if (i == 4 || !arena.getPlayers().contains(player) || arena.getArenaState() == ArenaState.RESTARTING) {
-							this.cancel();
+							cancel();
 						}
 
 						MiscUtils.spawnRandomFirework(player.getLocation());
@@ -334,9 +320,9 @@ public class ArenaManager {
 	private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {
 		String formatted = msg;
 		Player winner = getWinner(arena);
-		Player loser = getLoser(arena);
+		Player loser = arena.getPlayers().stream().filter(p -> StatsStorage.getUserStats(p, StatsStorage.StatisticType.LOCAL_WON) == -1).findFirst().orElse(null);
 
-		formatted = StringUtils.replace(formatted, "%duration%", StringFormatUtils.formatIntoMMSS(plugin.getConfig().getInt("Classic-Gameplay-Time", 900) - arena.getTimer()));
+		formatted = StringUtils.replace(formatted, "%duration%", StringFormatUtils.formatIntoMMSS(plugin.getConfig().getInt("Classic-Gameplay-Time", 540) - arena.getTimer()));
 
 		formatted = StringUtils.replace(formatted, "%winner%", winner != null ? winner.getName() : "");
 		formatted = StringUtils.replace(formatted, "%winner_damage_dealt%", Integer.toString(StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_DAMAGE_DEALT) / 2));
@@ -359,10 +345,6 @@ public class ArenaManager {
 
 	private static Player getWinner(Arena arena) {
 		return arena.getPlayers().stream().filter(p -> StatsStorage.getUserStats(p, StatsStorage.StatisticType.LOCAL_WON) == 1).findFirst().orElse(null);
-	}
-
-	private static Player getLoser(Arena arena) {
-		return arena.getPlayers().stream().filter(p -> StatsStorage.getUserStats(p, StatsStorage.StatisticType.LOCAL_WON) == -1).findFirst().orElse(null);
 	}
 
 	public static String getNaNOrArithmetic(int x, int y) {
