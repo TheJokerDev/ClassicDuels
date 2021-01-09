@@ -320,8 +320,9 @@ public class Events implements Listener {
 
 		ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
 		Player player = event.getPlayer();
+		Arena currentArena = ArenaRegistry.getArena(player);
 
-		if (!ArenaRegistry.isInArena(player) || !ItemUtils.isNamed(itemStack)) {
+		if (currentArena == null || !ItemUtils.isNamed(itemStack)) {
 			return;
 		}
 
@@ -333,6 +334,8 @@ public class Events implements Listener {
 
 		if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Play-Again")) {
 			event.setCancelled(true);
+
+			ArenaManager.leaveAttempt(player, currentArena);
 
 			Map<Arena, Integer> arenas = new HashMap<>();
 
