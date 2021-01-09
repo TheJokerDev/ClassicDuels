@@ -1,4 +1,5 @@
 ### 1.0.3 Release (07.01.2021 - 09.01.2021)
+* Added 144 character support for scoreboard entries in Minecraft 1.14 and higher versions.
 * Added option to enable fall damage.
 * Added migrator for configuration files.
 * Added multi-world support.
@@ -6,6 +7,7 @@
 * Added more option to customize for spectator and lobby items.
 * Added new lore messages to cuboid selector item.
 * Added new value to scoreboard contents which shows opponent's direction with arrows.
+* Fixed scoreboard color matching in Minecraft 1.14 and higher versions.
 * Fixed possible null pointer exception on registering commands.
 * Fixed default script engine commands in rewards file.
 * Fixed hiding nametags.
