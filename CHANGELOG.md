@@ -1,4 +1,5 @@
 ### 1.0.3 Release (07.01.2021 - 09.01.2021)
+* Added missing prefix to some setup messages.
 * Added 144 character support for scoreboard entries in Minecraft 1.14 and higher versions.
 * Added option to enable fall damage.
 * Added migrator for configuration files.
@@ -7,6 +8,8 @@
 * Added more option to customize for spectator and lobby items.
 * Added new lore messages to cuboid selector item.
 * Added new value to scoreboard contents which shows opponent's direction with arrows.
+* Fixed can not breaking blocks while player is not in any arena.
+* Fixed adding arena signs manually break arena configuration.
 * Fixed scoreboard color matching in Minecraft 1.14 and higher versions.
 * Fixed possible null pointer exception on registering commands.
 * Fixed default script engine commands in rewards file.
@@ -25,13 +28,14 @@
 * Changed default leave item to red bed from white bed.
 * Changed PAPI's plugin version with Bukkit's.
 * Changed some debugger keys.
+* Changed some colors in cuboid selector lore.
 * Now item names in arena selector gui are fully customizable.
 * Now list command replaces values faster.
 * Improved tab completion.
 * Disabled locales in debug mode.
 * Updated license header.
 
-** Also contains more news from previous hotfix releases whose are in 1.0.2 logs.**
+**Also contains more news from previous hotfix releases whose are in 1.0.2 logs.**
 
 ### 1.0.2 Release (14.11.2020 - 18.11.2020)
 * Added license header.

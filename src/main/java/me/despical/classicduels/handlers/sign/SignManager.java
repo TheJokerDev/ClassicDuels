@@ -87,43 +87,27 @@ public class SignManager implements Listener {
 			return;
 		}
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
-			if (!arena.getId().equalsIgnoreCase(e.getLine(1))) {
-				continue;
-			}
+		Arena arena = ArenaRegistry.getArena(e.getLine(1));
 
-			for (int i = 0; i < signLines.size(); i++) {
-				e.setLine(i, formatSign(signLines.get(i), arena));
-			}
-
-			arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
-			e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
-
-			String location = LocationSerializer.locationToString(e.getBlock().getLocation());
-			List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
-			locs.add(location);
-
-			config.set("instances." + arena.getId() + ".signs", locs);
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+		if (arena == null) {
+			e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Arena-Doesnt-Exists"));
 			return;
 		}
 
-		e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Arena-Doesnt-Exists"));
-	}
+		arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
 
-	private String formatSign(String msg, Arena a) {
-		String formatted = msg;
-		formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
-
-		if (a.getPlayers().size() == 2) {
-			formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
-		} else {
-			formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
+		for (int i = 0; i < signLines.size(); i++) {
+			e.setLine(i, formatSign(signLines.get(i), arena));
 		}
 
-		formatted = StringUtils.replace(formatted, "%players%", String.valueOf(a.getPlayers().size()));
-		formatted = plugin.getChatManager().colorRawMessage(formatted);
-		return formatted;
+		e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
+
+		String location = LocationSerializer.locationToString(e.getBlock().getLocation());
+		List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
+		locs.add(location);
+
+		config.set("instances." + arena.getId() + ".signs", locs);
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -161,6 +145,21 @@ public class SignManager implements Listener {
 		}
 
 		e.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&cCouldn't remove sign from configuration! Please do this manually!"));
+	}
+
+	private String formatSign(String msg, Arena a) {
+		String formatted = msg;
+		formatted = StringUtils.replace(formatted, "%mapname%", a.getMapName());
+
+		if (a.getPlayers().size() == 2) {
+			formatted = StringUtils.replace(formatted, "%state%", plugin.getChatManager().colorMessage("Signs.Game-States.Full-Game"));
+		} else {
+			formatted = StringUtils.replace(formatted, "%state%", gameStateToString.get(a.getArenaState()));
+		}
+
+		formatted = StringUtils.replace(formatted, "%players%", String.valueOf(a.getPlayers().size()));
+		formatted = plugin.getChatManager().colorRawMessage(formatted);
+		return formatted;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

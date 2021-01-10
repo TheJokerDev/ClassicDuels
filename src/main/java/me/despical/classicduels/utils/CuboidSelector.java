@@ -46,13 +46,13 @@ public class CuboidSelector implements Listener {
 	public void giveSelectorWand(Player p) {
 		ItemStack stack = new ItemBuilder(Material.BLAZE_ROD)
 			.name("&6&lArea selector")
-			.lore("&eLEFT CLICK to select first corner.")
-			.lore("&eRIGHT CLICK to select second corner.")
+			.lore("&7Right-click to select second corner.")
+			.lore("&7Left-click to select first corner.")
 			.build();
 		p.getInventory().addItem(stack);
 
-		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&eYou received area selector wand!"));
-		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&eSelect bottom corner using left click!"));
+		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&7You received area selector wand!"));
+		p.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&7Select bottom corner using left click!"));
 	}
 
 	public Selection getSelection(Player p) {

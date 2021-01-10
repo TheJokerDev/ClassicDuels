@@ -92,7 +92,7 @@ public class MiscComponents implements SetupComponent {
 			Location location = player.getTargetBlock(null, 10).getLocation();
 
 			if (!(location.getBlock().getState() instanceof Sign)) {
-				player.sendMessage(plugin.getChatManager().colorMessage("Commands.Look-Sign"));
+				player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Look-Sign"));
 				return;
 			}
 
@@ -103,7 +103,7 @@ public class MiscComponents implements SetupComponent {
 
 			plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
 			plugin.getSignManager().updateSigns();
-			player.sendMessage(plugin.getChatManager().colorMessage("Signs.Sign-Created"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
 
 			String signLoc = LocationSerializer.locationToString(location);
 			List<String> locs = config.getStringList(s + "signs");
@@ -124,7 +124,7 @@ public class MiscComponents implements SetupComponent {
 
 				@Override
 				public String getPromptText(ConversationContext context) {
-					return plugin.getChatManager().colorRawMessage("&ePlease type in chat arena name! You can use color codes.");
+					return plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&ePlease type in chat arena name! You can use color codes.");
 				}
 
 				@Override
@@ -148,7 +148,7 @@ public class MiscComponents implements SetupComponent {
 			.lore("&7know some useful tips? Click to get wiki link!")
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&7Check out our wiki: https://github.com/Despical/ClassicDuels/wiki"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&8Check out our wiki: &7https://github.com/Despical/ClassicDuels/wiki"));
 		}), 7, 0);
 	}
 }

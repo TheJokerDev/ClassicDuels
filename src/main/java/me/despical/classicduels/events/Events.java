@@ -369,7 +369,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
