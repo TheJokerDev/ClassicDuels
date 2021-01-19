@@ -293,7 +293,7 @@ public class ArenaManager {
 
 			if (!quickStop) {
 				for (String msg : plugin.getChatManager().getStringList("In-Game.Messages.Game-End-Messages.Summary-Message")) {
-					if (msg.equals("%winner_health_hearts%") && user.getStat(StatsStorage.StatisticType.LOCAL_WON) == 1) {
+					if (msg.equals("%winner_health_hearts%") && user.getStat(StatsStorage.StatisticType.LOCAL_WON) == -1) {
 						MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(plugin.getChatManager().colorMessage("Summary-Message-Addition-Opponent-Hearts"), arena, player));
 						continue;
 					}
