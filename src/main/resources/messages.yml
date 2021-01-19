@@ -151,8 +151,9 @@ In-Game:
         - "&a%winner_melee_accuracy% &7- &f&lMelee Accuracy &7- &a%loser_melee_accuracy%"
         - "&a%winner_bow_accuracy% &7- &f&lBow Accuracy &7- &a%loser_bow_accuracy%"
         - "&a%winner_health_regenerated%&c❤ &7- &f&lHealth Regenerated &7- &a%loser_health_regenerated%&c❤"
-        - ""
+        - "%winner_health_hearts%"
         - "&a&m----------------------------------------------------"
+      Summary-Message-Winner-Opponent-Hearts: "\n%winner_health_hearts% &7- &a%winner%'s Health"
     Admin-Messages:
       Stopped-Game: "&bAn admin has been force stopped the game by command!"
 
