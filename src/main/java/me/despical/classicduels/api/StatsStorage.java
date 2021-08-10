@@ -104,7 +104,11 @@ public class StatsStorage {
 	 * @see StatisticType
 	 */
 	public static int getUserStats(Player player, StatisticType statisticType) {
-		return plugin.getUserManager().getUser(player).getStat(statisticType);
+		try {
+			return plugin.getUserManager().getUser(player).getStat(statisticType);
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
 	/**

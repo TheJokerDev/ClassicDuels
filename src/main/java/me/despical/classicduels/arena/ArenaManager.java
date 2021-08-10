@@ -288,8 +288,10 @@ public class ArenaManager {
 			}
 
 			player.getInventory().clear();
+			/*
 			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
 			player.getInventory().setItem(SpecialItemManager.getSpecialItem("Play-Again").getSlot(), SpecialItemManager.getSpecialItem("Play-Again").getItemStack());
+			 */
 
 			if (!quickStop) {
 				for (String msg : plugin.getChatManager().getStringList("In-Game.Messages.Game-End-Messages.Summary-Message")) {
@@ -298,7 +300,9 @@ public class ArenaManager {
 						continue;
 					}
 
-					MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
+					if (plugin.getUserManager().getUser(player) != null) {
+						MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
+					}
 				}
 			}
 
@@ -336,7 +340,10 @@ public class ArenaManager {
 		formatted = StringUtils.replace(formatted, "%winner_melee_accuracy%", getNaNOrArithmetic(StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_ACCURATE_HITS), StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_MISSED_HITS)));
 		formatted = StringUtils.replace(formatted, "%winner_bow_accuracy%", getNaNOrArithmetic(StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_ACCURATE_ARROWS), StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_SHOOTED_ARROWS)));
 		formatted = StringUtils.replace(formatted, "%winner_health_regenerated%", Integer.toString(StatsStorage.getUserStats(winner, StatsStorage.StatisticType.LOCAL_HEALTH_REGEN)));
-		formatted = StringUtils.replace(formatted, "%winner_health_hearts%", plugin.getChatManager().colorRawMessage(IntStream.range(0, 10).mapToObj(i -> Math.round(winner.getHealth() / 2) > i ? "&c❤&r" : "❤").collect(Collectors.joining())));
+		try {
+			formatted = StringUtils.replace(formatted, "%winner_health_hearts%", plugin.getChatManager().colorRawMessage(IntStream.range(0, 10).mapToObj(i -> Math.round(winner.getHealth() / 2) > i ? "&c❤&r" : "❤").collect(Collectors.joining())));
+		} catch (Exception ignored) {
+		}
 
 		formatted = StringUtils.replace(formatted, "%loser%", loser != null ? loser.getName() : "");
 		formatted = StringUtils.replace(formatted, "%loser_damage_dealt%", Integer.toString(StatsStorage.getUserStats(loser, StatsStorage.StatisticType.LOCAL_DAMAGE_DEALT) / 2));

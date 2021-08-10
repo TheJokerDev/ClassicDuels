@@ -197,8 +197,13 @@ public class Events implements Listener {
 			return;
 		}
 
+		User user = plugin.getUserManager().getUser((Player) event.getDamager());
+		if (user.isSpectator() || user.getPlayer().getAllowFlight()){
+			event.setCancelled(true);
+			return;
+		}
+
 		if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
-			User user = plugin.getUserManager().getUser((Player) event.getDamager());
 			user.addStat(StatsStorage.StatisticType.LOCAL_ACCURATE_HITS, 1);
 			user.addStat(StatsStorage.StatisticType.LOCAL_DAMAGE_DEALT, (int) event.getDamage());
 		}
@@ -254,6 +259,12 @@ public class Events implements Listener {
 			plugin.getRewardsFactory().performReward(killer, Reward.RewardType.KILL);
 		}
 
+		for (Player p2 : arena.getPlayers()){
+			if (p2 != victim){
+				p2.hidePlayer(victim);
+			}
+		}
+
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			victim.spigot().respawn();
 			ArenaManager.stopGame(false, arena);
@@ -300,7 +311,7 @@ public class Events implements Listener {
 			return;
 		}
 
-		if (itemStack.getType() == Material.BED) {
+		if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
 			event.setCancelled(true);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -443,7 +454,7 @@ public class Events implements Listener {
 			Player player = e.getPlayer();
 
 			if (e.getMessage().equalsIgnoreCase("/leave")) {
-				player.performCommand("cd leave");
+				player.chat("/cd leave");
 				e.setCancelled(true);
 			}
 		}

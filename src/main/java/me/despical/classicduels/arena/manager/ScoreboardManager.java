@@ -132,9 +132,9 @@ public class ScoreboardManager {
 		formattedLine = StringUtils.replace(formattedLine, "%formatted_time%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
 		formattedLine = StringUtils.replace(formattedLine, "%mapname%", arena.getMapName());
 		formattedLine = StringUtils.replace(formattedLine, "%players%", String.valueOf(arena.getPlayers().size()));
-		formattedLine = StringUtils.replace(formattedLine, "%player_health%", String.valueOf((int) user.getPlayer().getHealth()));
+		formattedLine = StringUtils.replace(formattedLine, "%health%", String.valueOf((int) user.getPlayer().getHealth()));
 		formattedLine = StringUtils.replace(formattedLine, "%opponent%", getOpponent(user));
-		formattedLine = StringUtils.replace(formattedLine, "%opponent_health%", String.valueOf(Bukkit.getPlayerExact(getOpponent(user)) != null ? (int) Bukkit.getPlayerExact(getOpponent(user)).getHealth() : 0));
+		formattedLine = StringUtils.replace(formattedLine, "%health2%", String.valueOf(Bukkit.getPlayerExact(getOpponent(user)) != null ? (int) Bukkit.getPlayerExact(getOpponent(user)).getHealth() : 0));
 		formattedLine = StringUtils.replace(formattedLine, "%win_streak%", String.valueOf(user.getStat(StatsStorage.StatisticType.WIN_STREAK)));
 
 		Player player = Bukkit.getPlayer(getOpponent(user));
