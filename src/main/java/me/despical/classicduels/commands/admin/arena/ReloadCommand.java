@@ -83,7 +83,6 @@ public class ReloadCommand extends SubCommand {
 			long stopTime = System.currentTimeMillis();
 
 			for (Player player : arena.getPlayers()) {
-				arena.doBarAction(Arena.BarAction.REMOVE, player);
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);

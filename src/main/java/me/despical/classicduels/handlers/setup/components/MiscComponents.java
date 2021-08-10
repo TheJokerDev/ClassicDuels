@@ -43,6 +43,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -89,7 +90,7 @@ public class MiscComponents implements SetupComponent {
 			}
 
 			e.getWhoClicked().closeInventory();
-			Location location = player.getTargetBlock(null, 10).getLocation();
+			Location location = player.getTargetBlock((Set<Material>)null, 10).getLocation();
 
 			if (!(location.getBlock().getState() instanceof Sign)) {
 				player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Look-Sign"));

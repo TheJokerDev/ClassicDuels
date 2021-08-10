@@ -148,7 +148,6 @@ public class Main extends JavaPlugin {
 			arena.getScoreboardManager().stopAllScoreboards();
 
 			for (Player player : arena.getPlayers()) {
-				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.teleportToEndLocation(player);
 				player.setFlySpeed(0.1f);
 				player.setWalkSpeed(0.2f);

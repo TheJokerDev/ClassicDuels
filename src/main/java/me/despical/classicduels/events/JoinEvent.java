@@ -59,8 +59,8 @@ public class JoinEvent implements Listener {
 				continue;
 			}
 
-			player.hidePlayer(plugin, event.getPlayer());
-			event.getPlayer().hidePlayer(plugin, player);
+			player.hidePlayer(event.getPlayer());
+			event.getPlayer().hidePlayer(player);
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

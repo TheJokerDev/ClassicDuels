@@ -23,6 +23,7 @@ import me.despical.classicduels.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -46,11 +47,11 @@ public class ArenaUtils {
 	}
 
 	public static void hidePlayer(Player p, Arena arena) {
-		arena.getPlayers().forEach(player -> player.hidePlayer(plugin, p));
+		arena.getPlayers().forEach(player -> player.hidePlayer(p));
 	}
 
 	public static void showPlayer(Player p, Arena arena) {
-		arena.getPlayers().forEach(player -> player.showPlayer(plugin, p));
+		arena.getPlayers().forEach(player -> player.showPlayer(p));
 	}
 
 	public static void hidePlayersOutsideTheGame(Player player, Arena arena) {
@@ -59,8 +60,8 @@ public class ArenaUtils {
 				continue;
 			}
 
-			player.hidePlayer(plugin, players);
-			players.hidePlayer(plugin, player);
+			player.hidePlayer(players);
+			players.hidePlayer(player);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class ArenaUtils {
 			}
 
 			team.setAllowFriendlyFire(false);
-			team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+			team.setNameTagVisibility(NameTagVisibility.NEVER);
 
 			if (arena.getArenaState() == ArenaState.IN_GAME) {
 				team.addEntry(p.getName());

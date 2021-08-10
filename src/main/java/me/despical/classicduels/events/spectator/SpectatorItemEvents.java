@@ -64,7 +64,7 @@ public class SpectatorItemEvents implements Listener {
 				return;
 			}
 
-			ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+			ItemStack stack = e.getPlayer().getInventory().getItemInHand();
 
 			if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
 				return;

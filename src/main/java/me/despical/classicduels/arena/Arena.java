@@ -18,6 +18,7 @@
 
 package me.despical.classicduels.arena;
 
+import me.confuser.barapi.BarAPI;
 import me.despical.classicduels.ConfigPreferences;
 import me.despical.classicduels.Main;
 import me.despical.classicduels.api.StatsStorage;
@@ -39,9 +40,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -72,7 +70,7 @@ public class Arena extends BukkitRunnable {
 	private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
 	private ArenaState arenaState = ArenaState.INACTIVE;
-	private BossBar gameBar;
+	private BarAPI gameBar;
 	private final ScoreboardManager scoreboardManager;
 	private String mapName = "";
 	private boolean ready;
@@ -82,10 +80,6 @@ public class Arena extends BukkitRunnable {
 
 		for (ArenaOption option : ArenaOption.values()) {
 			arenaOptions.put(option, option.getDefaultValue());
-		}
-
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
 		}
 
 		scoreboardManager = new ScoreboardManager(this);
@@ -121,9 +115,6 @@ public class Arena extends BukkitRunnable {
 						break;
 					}
 				} else {
-					if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-						gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"));
-					}
 
 					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
 					setArenaState(ArenaState.STARTING);
@@ -139,11 +130,6 @@ public class Arena extends BukkitRunnable {
 					broadcast(plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%time%", String.valueOf(getTimer())));
 				}
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
-					gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 5));
-				}
-
 				if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_LEVEL_COUNTDOWN)) {
 					for (Player player : getPlayers()) {
 						player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 5)));
@@ -152,10 +138,6 @@ public class Arena extends BukkitRunnable {
 				}
 
 				if (getPlayers().size() < 2) {
-					if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-						gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"));
-						gameBar.setProgress(1.0);
-					}
 
 					broadcast(plugin.getChatManager().formatMessage(this, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), 2));
 
@@ -176,10 +158,6 @@ public class Arena extends BukkitRunnable {
 
 					Bukkit.getPluginManager().callEvent(gameStartEvent);
 					setArenaState(ArenaState.IN_GAME);
-
-					if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-						gameBar.setProgress(1.0);
-					}
 
 					setTimer(6);
 
@@ -208,10 +186,6 @@ public class Arena extends BukkitRunnable {
 
 						player.updateInventory();
 					}
-				}
-
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.In-Game-Info"));
 				}
 
 				if (getTimer() <= 5) {
@@ -252,10 +226,6 @@ public class Arena extends BukkitRunnable {
 					plugin.getServer().setWhitelist(false);
 				}
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.Game-Ended"));
-				}
-
 				List<Player> playersToQuit = new ArrayList<>(getPlayers());
 
 				for (Player player : playersToQuit) {
@@ -265,10 +235,10 @@ public class Arena extends BukkitRunnable {
 					AttributeUtils.resetAttackCooldown(player);
 
 					for (Player playerToShow : Bukkit.getOnlinePlayers()) {
-						player.showPlayer(plugin, playerToShow);
+						player.showPlayer(playerToShow);
 
 						if (!ArenaRegistry.isInArena(playerToShow)) {
-							playerToShow.showPlayer(plugin, player);
+							playerToShow.showPlayer(player);
 						}
 					}
 
@@ -280,8 +250,6 @@ public class Arena extends BukkitRunnable {
 					player.getInventory().setArmorContents(null);
 					player.setFireTicks(0);
 					player.setFoodLevel(20);
-
-					doBarAction(BarAction.REMOVE, player);
 				}
 
 				teleportAllToEndLocation();
@@ -294,7 +262,6 @@ public class Arena extends BukkitRunnable {
 
 				for (User user : plugin.getUserManager().getUsers(this)) {
 					user.setSpectator(false);
-					user.getPlayer().setCollidable(true);
 				}
 
 				plugin.getRewardsFactory().performReward(this, Reward.RewardType.END_GAME);
@@ -318,10 +285,6 @@ public class Arena extends BukkitRunnable {
 					for (Player player : Bukkit.getOnlinePlayers()) {
 						ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
 					}
-				}
-
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-					gameBar.setTitle(plugin.getChatManager().colorMessage("Bossbar.Waiting-For-Players"));
 				}
 
 				break;
@@ -438,29 +401,6 @@ public class Arena extends BukkitRunnable {
 		getPlayersLeft().get(1).teleport(getSecondPlayerLocation());
 	}
 
-	/**
-	 * Executes boss bar action for arena
-	 *
-	 * @param action add or remove a player from boss bar
-	 * @param p player
-	 */
-	public void doBarAction(BarAction action, Player p) {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-			return;
-		}
-
-		switch (action) {
-			case ADD:
-				gameBar.addPlayer(p);
-				break;
-			case REMOVE:
-				gameBar.removePlayer(p);
-				break;
-			default:
-				break;
-		}
-	}
-
 	public Location getFirstPlayerLocation() {
 		return gameLocations.get(GameLocation.FIRST_PLAYER);
 	}
@@ -533,8 +473,12 @@ public class Arena extends BukkitRunnable {
 						if (plugin.getConfig().getStringList("Whitelisted-Blocks").contains(block.getType().name())) {
 							Bukkit.getScheduler().runTask(plugin, () -> block.setType(Material.AIR));
 						}
-
-						new Location(minArea.getWorld(), x, y, z).getNearbyEntitiesByType(Arrow.class, 2).forEach(Entity::remove);
+						Location loc = new Location(minArea.getWorld(), x, y, z);
+						for(Entity e : loc.getWorld().getNearbyEntities(loc, 2, 2, 2)){
+							if (e instanceof Arrow){
+								e.remove();
+							}
+						}
 					}
 				}
 			}
@@ -586,8 +530,8 @@ public class Arena extends BukkitRunnable {
 	void showPlayers() {
 		for (Player player : players) {
 			for (Player p : players) {
-				player.showPlayer(plugin, p);
-				p.showPlayer(plugin, player);
+				player.showPlayer(p);
+				p.showPlayer(player);
 			}
 		}
 	}

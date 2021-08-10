@@ -59,7 +59,7 @@ public class MiscComponents implements SpectatorSettingComponent {
 				.lore(plugin.getChatManager().getStringList("In-Game.Spectator.Settings-Menu.Disable-Night-Vision-Lore"))
 				.build();
 		} else {
-			nightVision = new ItemBuilder(Material.ENDER_EYE)
+			nightVision = new ItemBuilder(Material.EYE_OF_ENDER)
 				.name(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Enable-Night-Vision"))
 				.lore(plugin.getChatManager().getStringList("In-Game.Spectator.Settings-Menu.Enable-Night-Vision-Lore"))
 				.build();
@@ -93,10 +93,10 @@ public class MiscComponents implements SpectatorSettingComponent {
 		pane.addItem(new GuiItem(specItem, e -> {
 			e.getWhoClicked().closeInventory();
 			if (canSee) {
-				arena.getPlayers().stream().filter(p -> plugin.getUserManager().getUser(p).isSpectator()).forEach(p -> player.hidePlayer(plugin, p));
+				arena.getPlayers().stream().filter(p -> plugin.getUserManager().getUser(p).isSpectator()).forEach(p -> player.hidePlayer(p));
 				player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Show-Spectators-Message"));
 			} else {
-				arena.getPlayers().stream().filter(p -> plugin.getUserManager().getUser(p).isSpectator()).forEach(p -> player.showPlayer(plugin, p));
+				arena.getPlayers().stream().filter(p -> plugin.getUserManager().getUser(p).isSpectator()).forEach(p -> player.showPlayer(p));
 				player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Hide-Spectators-Message"));
 			}
 		}), 3, 2);

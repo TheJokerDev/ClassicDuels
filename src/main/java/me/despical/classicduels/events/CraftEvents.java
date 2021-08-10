@@ -19,12 +19,7 @@
 package me.despical.classicduels.events;
 
 import me.despical.classicduels.Main;
-import me.despical.classicduels.arena.ArenaRegistry;
-import me.despical.commonsbox.compat.VersionResolver;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 /**
  * @author Despical
@@ -38,21 +33,5 @@ public class CraftEvents implements Listener {
 
 	public CraftEvents(Main plugin) {
 		this.plugin = plugin;
-
-		if (VersionResolver.isCurrentHigher(VersionResolver.ServerVersion.v1_9_R2)) {
-			registerItemSwapEvent();
-		}
-	}
-
-	public void registerItemSwapEvent() {
-		Bukkit.getPluginManager().registerEvents(new Listener() {
-
-			@EventHandler
-			public void onItemSwap(PlayerSwapHandItemsEvent e) {
-				if (ArenaRegistry.isInArena(e.getPlayer())) {
-					e.setCancelled(true);
-				}
-			}
-		}, plugin);
 	}
 }

@@ -45,14 +45,26 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>confuser-repo</id>
+            <url>https://ci.frostcast.net/plugin/repository/everything</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <systemPath>${user.home}/Google Drive/JavaProjects/IdeaProjects/paper-1.8.8.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <systemPath>${user.home}/Google Drive/JavaProjects/IdeaProjects/spigot-1.8.8.jar</systemPath>
+            <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
@@ -87,6 +99,12 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.confuser</groupId>
+            <artifactId>BarAPI</artifactId>
+            <version>3.5</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

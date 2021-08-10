@@ -271,7 +271,6 @@ public class Events implements Listener {
 
 		event.setRespawnLocation(ArenaRegistry.getArena(player).getFirstPlayerLocation());
 
-		player.setCollidable(false);
 		player.setGameMode(GameMode.SURVIVAL);
 		player.setAllowFlight(true);
 		player.setFlying(true);
@@ -289,7 +288,7 @@ public class Events implements Listener {
 		}
 
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
-		ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+		ItemStack itemStack = event.getPlayer().getInventory().getItemInHand();
 
 		if (arena == null || !ItemUtils.isNamed(itemStack)) {
 			return;
@@ -318,7 +317,7 @@ public class Events implements Listener {
 			return;
 		}
 
-		ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+		ItemStack itemStack = event.getPlayer().getInventory().getItemInHand();
 		Player player = event.getPlayer();
 		Arena currentArena = ArenaRegistry.getArena(player);
 
@@ -472,7 +471,7 @@ public class Events implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onArrowPickup(PlayerPickupArrowEvent e) {
+	public void onArrowPickup(PlayerPickupItemEvent e) {
 		if (!ArenaRegistry.isInArena(e.getPlayer())) {
 			return;
 		}

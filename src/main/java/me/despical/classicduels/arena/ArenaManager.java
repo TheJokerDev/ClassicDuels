@@ -134,15 +134,14 @@ public class ArenaManager {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false));
 			ArenaUtils.hidePlayer(player, arena);
 			user.setSpectator(true);
-			player.setCollidable(false);
 			player.setAllowFlight(true);
 			player.setFlying(true);
 
 			for (Player spectator : arena.getPlayers()) {
 				if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-					player.hidePlayer(plugin, spectator);
+					player.hidePlayer(spectator);
 				} else {
-					player.showPlayer(plugin, spectator);
+					player.showPlayer(spectator);
 				}
 			}
 
@@ -154,7 +153,6 @@ public class ArenaManager {
 		arena.teleportToLobby(player);
 		player.setFlying(false);
 		player.setAllowFlight(false);
-		arena.doBarAction(Arena.BarAction.ADD, player);
 
 		if (!user.isSpectator()) {
 			plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
@@ -208,11 +206,8 @@ public class ArenaManager {
 			plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
 		}
 
-		player.setGlowing(false);
 		user.setSpectator(false);
-		player.setCollidable(false);
 		user.removeScoreboard();
-		arena.doBarAction(Arena.BarAction.REMOVE, player);
 		AttributeUtils.healPlayer(player);
 		player.setFoodLevel(20);
 		player.setLevel(0);
@@ -226,10 +221,10 @@ public class ArenaManager {
 
 		for (Player players : plugin.getServer().getOnlinePlayers()) {
 			if (!ArenaRegistry.isInArena(players)) {
-				players.showPlayer(plugin, player);
+				players.showPlayer(player);
 			}
 
-			player.showPlayer(plugin, players);
+			player.showPlayer(players);
 		}
 
 		arena.teleportToEndLocation(player);
