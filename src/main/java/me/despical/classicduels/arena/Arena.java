@@ -70,10 +70,18 @@ public class Arena extends BukkitRunnable {
 	private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
 	private ArenaState arenaState = ArenaState.INACTIVE;
-	private BarAPI gameBar;
+	private boolean finished = false;
 	private final ScoreboardManager scoreboardManager;
 	private String mapName = "";
 	private boolean ready;
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
 
 	public Arena(String id) {
 		this.id = id;
@@ -278,6 +286,7 @@ public class Arena extends BukkitRunnable {
 				players.clear();
 				clearArea();
 				setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+				setFinished(false);
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
 					ArenaRegistry.shuffleBungeeArena();

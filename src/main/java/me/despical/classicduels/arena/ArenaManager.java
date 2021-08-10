@@ -247,6 +247,11 @@ public class ArenaManager {
 	 * @see CDGameStopEvent
 	 */
 	public static void stopGame(boolean quickStop, Arena arena) {
+		if (!arena.isFinished()){
+			arena.setFinished(true);
+		} else {
+			return;
+		}
 		Debugger.debug("[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
 		long start = System.currentTimeMillis();
 		CDGameStopEvent gameStopEvent = new CDGameStopEvent(arena);

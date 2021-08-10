@@ -67,25 +67,4 @@ public class JoinEvent implements Listener {
 			InventorySerializer.loadInventory(plugin, event.getPlayer());
 		}
 	}
-
-	@EventHandler
-	public void onJoinCheckVersion(final PlayerJoinEvent event) {
-		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("oitc.updatenotify")) {
-			return;
-		}
-
-		Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 85356).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (!result.requiresUpdate()) {
-				return;
-			}
-
-			if (result.getNewestVersion().contains("b")) {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
-			} else {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[ClassicDuels] &bFound an update: v" + result.getNewestVersion() + " Download:"));
-			}
-
-			event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/classic-duels-1-9-1-16-4.85356/"));
-		}), 25);
-	}
 }

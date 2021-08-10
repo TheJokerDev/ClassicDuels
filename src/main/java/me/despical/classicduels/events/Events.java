@@ -300,7 +300,7 @@ public class Events implements Listener {
 			return;
 		}
 
-		if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+		if (itemStack.getType() == Material.BED) {
 			event.setCancelled(true);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {

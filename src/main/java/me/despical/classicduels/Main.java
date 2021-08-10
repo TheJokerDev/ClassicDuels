@@ -111,12 +111,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean validateIfPluginShouldStart() {
-		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
-			MessageUtils.thisVersionIsNotSupported();
-			Debugger.sendConsoleMessage("&cYour server version is not supported by Classic Duels!");
-			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
-			return false;
-		} try {
+		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (ClassNotFoundException e) {
 			MessageUtils.thisVersionIsNotSupported();
